@@ -12,7 +12,7 @@ function sidebar(string $active): string {
         <div class="h-full overflow-y-auto p-5">
         <div class="flex items-center gap-3 px-2 mb-8">
             <div class="h-11 w-11 rounded-xl bg-white text-emerald-800 flex items-center justify-center font-bold text-xl">♥</div>
-            <div><div class="font-bold">BLOOMS OPEN HAND</div><div class="text-xs text-emerald-200">Admin Panel</div></div>
+            <div><div class="font-bold">BLOOMS OPEN HAND AFH LLC</div><div class="text-xs text-emerald-200">Admin Panel</div></div>
         </div><nav class="space-y-1">';
     foreach ($items as $key => [$url,$icon,$label]) {
         $cls = $active === $key ? 'bg-emerald-600 text-white shadow' : 'text-slate-300 hover:bg-white/10 hover:text-white';
@@ -47,7 +47,7 @@ function pageStart(string $title, string $active): void {
     echo sidebar($active);
     echo '<main class="lg:ml-72 min-h-screen"><header class="sticky top-0 z-30 bg-white/95 backdrop-blur border-b px-5 lg:px-8 py-4 flex items-center justify-between">
         <div class="flex items-center gap-3"><button onclick="toggleSidebar()" class="lg:hidden h-10 w-10 rounded-lg border">☰</button>
-        <div><p class="text-xs text-slate-400">Home Care Website</p><h1 class="text-xl font-bold text-slate-800">'.h($title).'</h1></div></div>
+        <div><p class="text-xs text-slate-400">BLOOMS OPEN HAND AFH LLC</p><h1 class="text-xl font-bold text-slate-800">'.h($title).'</h1></div></div>
         <div class="text-sm text-slate-500">'.date('M d, Y').'</div></header><div class="p-5 lg:p-8">';
     $f = flash();
     if ($f) echo '<div class="mb-6 rounded-xl border p-4 '.($f[1]==='error'?'bg-red-50 border-red-200 text-red-700':'bg-emerald-50 border-emerald-200 text-emerald-700').'">'.h($f[0]).'</div>';
