@@ -18,7 +18,7 @@ if($_SERVER['REQUEST_METHOD']==='POST'){
     $message=trim($_POST['message']??'');
 
     /*
-     * Basic validation
+     * Validate required fields
      */
     if(
         !$name ||
@@ -30,18 +30,20 @@ if($_SERVER['REQUEST_METHOD']==='POST'){
 
         $error='Please complete your name, email, phone, preferred date, and preferred time.';
 
-    } 
+    }
+
     /*
-     * Make sure the selected date/time is actually in the future
+     * Make sure the selected date/time is in the future
      */
-    elseif(strtotime($date.' '.$time) <= time()){
+    elseif(strtotime($date.' '.$time)<=time()){
 
         $error='Please select a future date and time.';
 
-    } 
-    else {
+    }
 
-        try {
+    else{
+
+        try{
 
             $title='Client Request - '.$meetingType.' - '.$name;
 
@@ -83,20 +85,135 @@ if($_SERVER['REQUEST_METHOD']==='POST'){
                 'upcoming'
             ]);
 
+            /*
+             * Submission was successful
+             */
             $sent=true;
 
-        } catch(Throwable $e) {
+        }catch(Throwable $e){
 
             $error='We could not submit your request right now. Please call or email us directly.';
 
         }
+
     }
 }
 
 require __DIR__.'/header.php';
 ?>
 
-<!-- HERO -->
+
+<!-- =========================================================
+     SUCCESS POPUP
+========================================================= -->
+
+<?php if($sent): ?>
+
+<div
+    id="successModal"
+    class="fixed inset-0 z-[9999] flex items-center justify-center p-5"
+    aria-modal="true"
+    role="dialog"
+>
+
+    <!-- Background overlay -->
+    <div
+        id="successOverlay"
+        class="absolute inset-0 bg-slate-950/70 backdrop-blur-sm"
+    ></div>
+
+
+    <!-- Modal -->
+    <div
+        id="successBox"
+        class="relative w-full max-w-md rounded-[2rem] bg-white p-8 md:p-10 text-center shadow-2xl"
+    >
+
+        <!-- Close button -->
+        <button
+            type="button"
+            id="closeSuccessModal"
+            class="absolute right-5 top-5 flex h-10 w-10 items-center justify-center rounded-full bg-slate-100 text-slate-500 hover:bg-slate-200 hover:text-slate-800 transition"
+            aria-label="Close"
+        >
+            <svg
+                xmlns="http://www.w3.org/2000/svg"
+                class="h-5 w-5"
+                fill="none"
+                viewBox="0 0 24 24"
+                stroke="currentColor"
+                stroke-width="2"
+            >
+                <path
+                    stroke-linecap="round"
+                    stroke-linejoin="round"
+                    d="M6 18L18 6M6 6l12 12"
+                />
+            </svg>
+        </button>
+
+
+        <!-- Success icon -->
+        <div class="mx-auto flex h-20 w-20 items-center justify-center rounded-full bg-emerald-100">
+
+            <div class="flex h-14 w-14 items-center justify-center rounded-full bg-emerald-600 text-white">
+
+                <svg
+                    xmlns="http://www.w3.org/2000/svg"
+                    class="h-8 w-8"
+                    fill="none"
+                    viewBox="0 0 24 24"
+                    stroke="currentColor"
+                    stroke-width="2.5"
+                >
+                    <path
+                        stroke-linecap="round"
+                        stroke-linejoin="round"
+                        d="M5 13l4 4L19 7"
+                    />
+                </svg>
+
+            </div>
+
+        </div>
+
+
+        <!-- Title -->
+        <h2 class="mt-6 text-2xl md:text-3xl font-black text-slate-900">
+            Request Submitted!
+        </h2>
+
+
+        <!-- Message -->
+        <p class="mt-4 text-slate-600 leading-7">
+            Thank you, <?=h($name)?>. Your tour or care consultation request has been received successfully.
+        </p>
+
+        <p class="mt-2 text-sm text-slate-500">
+            Our team will review your request and contact you to confirm the appointment.
+        </p>
+
+
+        <!-- Close button -->
+        <button
+            type="button"
+            id="successDoneButton"
+            class="mt-7 w-full rounded-full bg-emerald-700 px-7 py-4 text-white font-bold hover:bg-emerald-800 hover:-translate-y-0.5 transition shadow-lg shadow-emerald-700/20"
+        >
+            Done
+        </button>
+
+    </div>
+
+</div>
+
+<?php endif; ?>
+
+
+<!-- =========================================================
+     HERO
+========================================================= -->
+
 <section class="relative overflow-hidden bg-[#063b2e] text-white">
 
     <div class="absolute -right-40 -top-40 h-96 w-96 rounded-full border border-white/10"></div>
@@ -122,12 +239,19 @@ require __DIR__.'/header.php';
 </section>
 
 
-<!-- MAIN CONTENT -->
+<!-- =========================================================
+     MAIN CONTENT
+========================================================= -->
+
 <section class="py-16 lg:py-24 bg-slate-50">
 
     <div class="max-w-7xl mx-auto px-5 grid lg:grid-cols-5 gap-10 items-start">
 
-        <!-- LEFT INFORMATION -->
+
+        <!-- =================================================
+             LEFT INFORMATION
+        ================================================== -->
+
         <div class="lg:col-span-2 lg:sticky lg:top-28">
 
             <span class="text-emerald-700 text-xs font-bold uppercase tracking-[.2em]">
@@ -142,9 +266,11 @@ require __DIR__.'/header.php';
                 A visit gives families an opportunity to see our residential setting, ask questions, discuss care needs, and learn whether Blooms Open Hand is the right fit.
             </p>
 
+
             <div class="mt-8 space-y-3">
 
                 <div class="rounded-2xl bg-white border p-5">
+
                     <strong class="block">
                         24-hour resident care
                     </strong>
@@ -152,9 +278,12 @@ require __DIR__.'/header.php';
                     <span class="text-sm text-slate-500">
                         Staffed and operating around the clock.
                     </span>
+
                 </div>
 
+
                 <div class="rounded-2xl bg-white border p-5">
+
                     <strong class="block">
                         6 licensed beds
                     </strong>
@@ -162,9 +291,12 @@ require __DIR__.'/header.php';
                     <span class="text-sm text-slate-500">
                         A small, familiar home environment.
                     </span>
+
                 </div>
 
+
                 <div class="rounded-2xl bg-white border p-5">
+
                     <strong class="block">
                         Owner-led communication
                     </strong>
@@ -172,6 +304,7 @@ require __DIR__.'/header.php';
                     <span class="text-sm text-slate-500">
                         Direct and responsive family support.
                     </span>
+
                 </div>
 
             </div>
@@ -179,10 +312,15 @@ require __DIR__.'/header.php';
         </div>
 
 
-        <!-- FORM -->
+        <!-- =================================================
+             FORM CARD
+        ================================================== -->
+
         <div class="lg:col-span-3 rounded-[2rem] bg-white border border-slate-200 shadow-xl shadow-slate-200/50 p-7 md:p-10">
 
+
             <!-- FORM HEADER -->
+
             <div class="flex items-center gap-4">
 
                 <div class="h-12 w-12 rounded-2xl bg-emerald-50 text-emerald-700 flex items-center justify-center text-xl">
@@ -204,7 +342,10 @@ require __DIR__.'/header.php';
             </div>
 
 
-            <!-- SUCCESS MESSAGE -->
+            <!-- =================================================
+                 FALLBACK SUCCESS MESSAGE
+            ================================================== -->
+
             <?php if($sent): ?>
 
                 <div class="mt-7 rounded-2xl bg-emerald-50 border border-emerald-200 p-6 text-emerald-900">
@@ -217,19 +358,15 @@ require __DIR__.'/header.php';
                         Thank you, <?=h($name)?>. We received your preferred schedule and will contact you to confirm the appointment.
                     </p>
 
-                    <a
-                        href="index.php"
-                        class="mt-5 inline-flex font-bold text-emerald-700 hover:text-emerald-900 transition"
-                    >
-                        Return home →
-                    </a>
-
                 </div>
 
             <?php endif; ?>
 
 
-            <!-- ERROR MESSAGE -->
+            <!-- =================================================
+                 ERROR MESSAGE
+            ================================================== -->
+
             <?php if($error): ?>
 
                 <div
@@ -242,7 +379,10 @@ require __DIR__.'/header.php';
             <?php endif; ?>
 
 
-            <!-- REQUEST FORM -->
+            <!-- =================================================
+                 FORM
+            ================================================== -->
+
             <form
                 method="POST"
                 id="scheduleForm"
@@ -250,7 +390,9 @@ require __DIR__.'/header.php';
                 novalidate
             >
 
+
                 <!-- NAME + EMAIL -->
+
                 <div class="grid sm:grid-cols-2 gap-5">
 
                     <div>
@@ -265,7 +407,7 @@ require __DIR__.'/header.php';
                         <input
                             id="name"
                             name="name"
-                            value="<?=h($_POST['name']??'')?>"
+                            value="<?= $sent ? '' : h($_POST['name']??'') ?>"
                             required
                             autocomplete="name"
                             class="mt-2 w-full rounded-xl border px-4 py-3 outline-none focus:border-emerald-600 focus:ring-4 focus:ring-emerald-100"
@@ -287,7 +429,7 @@ require __DIR__.'/header.php';
                             id="email"
                             name="email"
                             type="email"
-                            value="<?=h($_POST['email']??'')?>"
+                            value="<?= $sent ? '' : h($_POST['email']??'') ?>"
                             required
                             autocomplete="email"
                             class="mt-2 w-full rounded-xl border px-4 py-3 outline-none focus:border-emerald-600 focus:ring-4 focus:ring-emerald-100"
@@ -299,6 +441,7 @@ require __DIR__.'/header.php';
 
 
                 <!-- PHONE + MEETING TYPE -->
+
                 <div class="grid sm:grid-cols-2 gap-5">
 
                     <div>
@@ -314,7 +457,7 @@ require __DIR__.'/header.php';
                             id="phone"
                             name="phone"
                             type="tel"
-                            value="<?=h($_POST['phone']??'')?>"
+                            value="<?= $sent ? '' : h($_POST['phone']??'') ?>"
                             required
                             autocomplete="tel"
                             class="mt-2 w-full rounded-xl border px-4 py-3 outline-none focus:border-emerald-600 focus:ring-4 focus:ring-emerald-100"
@@ -362,9 +505,12 @@ require __DIR__.'/header.php';
 
 
                 <!-- DATE + TIME -->
+
                 <div class="grid sm:grid-cols-2 gap-5">
 
+
                     <!-- DATE -->
+
                     <div>
 
                         <label
@@ -379,7 +525,7 @@ require __DIR__.'/header.php';
                             name="tour_date"
                             type="date"
                             min="<?=date('Y-m-d')?>"
-                            value="<?=h($_POST['tour_date']??'')?>"
+                            value="<?= $sent ? '' : h($_POST['tour_date']??'') ?>"
                             required
                             class="mt-2 w-full rounded-xl border px-4 py-3 outline-none focus:border-emerald-600 focus:ring-4 focus:ring-emerald-100"
                         >
@@ -395,6 +541,7 @@ require __DIR__.'/header.php';
 
 
                     <!-- TIME -->
+
                     <div>
 
                         <label
@@ -408,7 +555,7 @@ require __DIR__.'/header.php';
                             id="tour_time"
                             name="tour_time"
                             type="time"
-                            value="<?=h($_POST['tour_time']??'')?>"
+                            value="<?= $sent ? '' : h($_POST['tour_time']??'') ?>"
                             required
                             class="mt-2 w-full rounded-xl border px-4 py-3 outline-none focus:border-emerald-600 focus:ring-4 focus:ring-emerald-100"
                         >
@@ -426,6 +573,7 @@ require __DIR__.'/header.php';
 
 
                 <!-- MESSAGE -->
+
                 <div>
 
                     <label
@@ -433,9 +581,11 @@ require __DIR__.'/header.php';
                         class="text-sm font-semibold"
                     >
                         Tell us a little about your needs
+
                         <span class="text-slate-400 font-normal">
                             (optional)
                         </span>
+
                     </label>
 
                     <textarea
@@ -443,12 +593,13 @@ require __DIR__.'/header.php';
                         name="message"
                         rows="5"
                         class="mt-2 w-full rounded-xl border px-4 py-3 outline-none focus:border-emerald-600 focus:ring-4 focus:ring-emerald-100"
-                    ><?=h($_POST['message']??'')?></textarea>
+                    ><?= $sent ? '' : h($_POST['message']??'') ?></textarea>
 
                 </div>
 
 
-                <!-- SUBMIT -->
+                <!-- SUBMIT BUTTON -->
+
                 <button
                     type="submit"
                     id="submitButton"
@@ -466,77 +617,203 @@ require __DIR__.'/header.php';
 </section>
 
 
+<!-- =========================================================
+     JAVASCRIPT
+========================================================= -->
+
 <script>
-document.addEventListener('DOMContentLoaded', function () {
 
-    const form = document.getElementById('scheduleForm');
-    const dateInput = document.getElementById('tour_date');
-    const timeInput = document.getElementById('tour_time');
+document.addEventListener('DOMContentLoaded', function(){
 
-    const dateError = document.getElementById('dateError');
-    const timeError = document.getElementById('timeError');
+    const form=document.getElementById('scheduleForm');
+
+    const dateInput=document.getElementById('tour_date');
+
+    const timeInput=document.getElementById('tour_time');
+
+    const dateError=document.getElementById('dateError');
+
+    const timeError=document.getElementById('timeError');
 
 
     /*
-     * Get today's date in the user's local timezone.
-     *
-     * Format:
-     * YYYY-MM-DD
+     * ========================================================
+     * SUCCESS MODAL
+     * ========================================================
      */
-    function getToday() {
 
-        const now = new Date();
+    const successModal=document.getElementById('successModal');
 
-        const year = now.getFullYear();
+    const closeSuccessModal=document.getElementById('closeSuccessModal');
 
-        const month = String(
-            now.getMonth() + 1
-        ).padStart(2, '0');
+    const successDoneButton=document.getElementById('successDoneButton');
 
-        const day = String(
-            now.getDate()
-        ).padStart(2, '0');
+    const successOverlay=document.getElementById('successOverlay');
 
-        return `${year}-${month}-${day}`;
+
+    /*
+     * Close success popup
+     */
+
+    function closeModal(){
+
+        if(successModal){
+
+            successModal.classList.add('hidden');
+
+            document.body.classList.remove('overflow-hidden');
+
+        }
+
+    }
+
+
+    if(successModal){
+
+        /*
+         * Prevent background scrolling
+         */
+
+        document.body.classList.add('overflow-hidden');
+
+
+        /*
+         * Close with X
+         */
+
+        if(closeSuccessModal){
+
+            closeSuccessModal.addEventListener(
+                'click',
+                closeModal
+            );
+
+        }
+
+
+        /*
+         * Close with Done
+         */
+
+        if(successDoneButton){
+
+            successDoneButton.addEventListener(
+                'click',
+                closeModal
+            );
+
+        }
+
+
+        /*
+         * Close when clicking the dark background
+         */
+
+        if(successOverlay){
+
+            successOverlay.addEventListener(
+                'click',
+                closeModal
+            );
+
+        }
+
+
+        /*
+         * Close with Escape key
+         */
+
+        document.addEventListener(
+            'keydown',
+            function(event){
+
+                if(event.key==='Escape'){
+
+                    closeModal();
+
+                }
+
+            }
+        );
+
     }
 
 
     /*
-     * Update the minimum allowed date and time.
+     * ========================================================
+     * DATE/TIME VALIDATION
+     * ========================================================
      */
-    function updateMinimumDateTime() {
 
-        const today = getToday();
+
+    /*
+     * Get today's date in local browser time.
+     *
+     * Returns:
+     * YYYY-MM-DD
+     */
+
+    function getToday(){
+
+        const now=new Date();
+
+        const year=now.getFullYear();
+
+        const month=String(
+            now.getMonth()+1
+        ).padStart(2,'0');
+
+        const day=String(
+            now.getDate()
+        ).padStart(2,'0');
+
+        return `${year}-${month}-${day}`;
+
+    }
+
+
+    /*
+     * Update minimum allowed date/time
+     */
+
+    function updateMinimumDateTime(){
+
+        const today=getToday();
+
 
         /*
-         * The date picker cannot select a date before today.
+         * Prevent past dates.
          */
-        dateInput.min = today;
+
+        dateInput.min=today;
 
 
         /*
          * If today is selected,
-         * the time picker cannot select a past time.
+         * prevent past times.
          */
-        if (dateInput.value === today) {
 
-            const now = new Date();
+        if(dateInput.value===today){
 
-            const hours = String(
+            const now=new Date();
+
+            const hours=String(
                 now.getHours()
-            ).padStart(2, '0');
+            ).padStart(2,'0');
 
-            const minutes = String(
+            const minutes=String(
                 now.getMinutes()
-            ).padStart(2, '0');
+            ).padStart(2,'0');
 
-            timeInput.min = `${hours}:${minutes}`;
+            timeInput.min=`${hours}:${minutes}`;
 
-        } else {
+        }else{
 
             /*
-             * For future dates, any time is allowed.
+             * For future dates,
+             * allow any time.
              */
+
             timeInput.removeAttribute('min');
 
         }
@@ -545,55 +822,62 @@ document.addEventListener('DOMContentLoaded', function () {
 
 
     /*
-     * Validate the selected date and time.
+     * Validate date and time.
      */
-    function validateDateTime(showErrors = true) {
 
-        const selectedDate = dateInput.value;
-        const selectedTime = timeInput.value;
+    function validateDateTime(showErrors=true){
+
+        const selectedDate=dateInput.value;
+
+        const selectedTime=timeInput.value;
+
 
         /*
          * Clear previous errors.
          */
+
         dateError.classList.add('hidden');
+
         timeError.classList.add('hidden');
 
+
         dateInput.classList.remove(
-            'border-red-500',
-            'focus:border-red-500',
-            'focus:ring-red-100'
+            'border-red-500'
         );
 
         timeInput.classList.remove(
-            'border-red-500',
-            'focus:border-red-500',
-            'focus:ring-red-100'
+            'border-red-500'
         );
 
 
         /*
-         * If either field is empty,
-         * let the required validation handle it.
+         * Let required fields handle empty values.
          */
-        if (!selectedDate || !selectedTime) {
+
+        if(!selectedDate || !selectedTime){
+
             return true;
+
         }
 
 
-        const today = getToday();
+        const today=getToday();
 
 
         /*
-         * Check if the selected date is before today.
+         * Check past date.
          */
-        if (selectedDate < today) {
 
-            if (showErrors) {
+        if(selectedDate<today){
 
-                dateError.textContent =
+            if(showErrors){
+
+                dateError.textContent=
                     'Please select today or a future date.';
 
-                dateError.classList.remove('hidden');
+                dateError.classList.remove(
+                    'hidden'
+                );
 
                 dateInput.classList.add(
                     'border-red-500'
@@ -602,34 +886,40 @@ document.addEventListener('DOMContentLoaded', function () {
             }
 
             return false;
+
         }
 
 
         /*
-         * Create the selected date/time.
+         * Build selected date/time.
          */
-        const selectedDateTime = new Date(
+
+        const selectedDateTime=new Date(
             `${selectedDate}T${selectedTime}`
         );
 
 
         /*
-         * Get the current date/time.
+         * Current date/time.
          */
-        const now = new Date();
+
+        const now=new Date();
 
 
         /*
-         * Make sure the appointment is in the future.
+         * Check if date/time is in the past.
          */
-        if (selectedDateTime <= now) {
 
-            if (showErrors) {
+        if(selectedDateTime<=now){
 
-                timeError.textContent =
+            if(showErrors){
+
+                timeError.textContent=
                     'Please select a future date and time.';
 
-                timeError.classList.remove('hidden');
+                timeError.classList.remove(
+                    'hidden'
+                );
 
                 timeInput.classList.add(
                     'border-red-500'
@@ -638,23 +928,24 @@ document.addEventListener('DOMContentLoaded', function () {
             }
 
             return false;
+
         }
 
 
-        /*
-         * Everything is valid.
-         */
         return true;
 
     }
 
 
     /*
-     * When the date changes.
+     * ========================================================
+     * DATE CHANGE
+     * ========================================================
      */
+
     dateInput.addEventListener(
         'change',
-        function () {
+        function(){
 
             updateMinimumDateTime();
 
@@ -665,11 +956,14 @@ document.addEventListener('DOMContentLoaded', function () {
 
 
     /*
-     * When the time changes.
+     * ========================================================
+     * TIME CHANGE
+     * ========================================================
      */
+
     timeInput.addEventListener(
         'change',
-        function () {
+        function(){
 
             validateDateTime(true);
 
@@ -678,11 +972,14 @@ document.addEventListener('DOMContentLoaded', function () {
 
 
     /*
-     * Validate while the user is typing/changing values.
+     * ========================================================
+     * DATE INPUT
+     * ========================================================
      */
+
     dateInput.addEventListener(
         'input',
-        function () {
+        function(){
 
             updateMinimumDateTime();
 
@@ -692,9 +989,15 @@ document.addEventListener('DOMContentLoaded', function () {
     );
 
 
+    /*
+     * ========================================================
+     * TIME INPUT
+     * ========================================================
+     */
+
     timeInput.addEventListener(
         'input',
-        function () {
+        function(){
 
             validateDateTime(false);
 
@@ -703,43 +1006,49 @@ document.addEventListener('DOMContentLoaded', function () {
 
 
     /*
-     * Final validation before submitting.
+     * ========================================================
+     * FORM SUBMISSION
+     * ========================================================
      */
+
     form.addEventListener(
         'submit',
-        function (event) {
+        function(event){
 
             /*
-             * Update the minimum values first.
+             * Update current minimum time.
              */
+
             updateMinimumDateTime();
 
 
             /*
-             * Check date/time.
+             * Validate date/time.
              */
-            const dateTimeIsValid =
-                validateDateTime(true);
+
+            const valid=validateDateTime(true);
 
 
             /*
-             * If date/time is in the past,
-             * completely stop the form submission.
+             * Stop submission if date/time
+             * is in the past.
              */
-            if (!dateTimeIsValid) {
+
+            if(!valid){
 
                 event.preventDefault();
 
-                const errorField =
+                const errorField=
                     document.querySelector(
                         '.border-red-500'
                     );
 
-                if (errorField) {
+
+                if(errorField){
 
                     errorField.scrollIntoView({
-                        behavior: 'smooth',
-                        block: 'center'
+                        behavior:'smooth',
+                        block:'center'
                     });
 
                     errorField.focus();
@@ -747,6 +1056,7 @@ document.addEventListener('DOMContentLoaded', function () {
                 }
 
                 return false;
+
             }
 
         }
@@ -754,32 +1064,41 @@ document.addEventListener('DOMContentLoaded', function () {
 
 
     /*
-     * Initialize when page loads.
+     * ========================================================
+     * INITIALIZE DATE/TIME
+     * ========================================================
      */
+
     updateMinimumDateTime();
 
 
     /*
      * Re-check every 30 seconds.
      *
-     * This is useful if the user keeps the page open
-     * for a long time and then selects "today".
+     * This is useful when the page stays open
+     * for a long time.
      */
+
     setInterval(
-        function () {
+        function(){
+
             updateMinimumDateTime();
 
-            if (
+            if(
                 dateInput.value &&
                 timeInput.value
-            ) {
+            ){
+
                 validateDateTime(false);
+
             }
+
         },
         30000
     );
 
 });
+
 </script>
 
 
