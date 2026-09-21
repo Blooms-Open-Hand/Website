@@ -17,7 +17,7 @@ define('BLOOMS_SMTP_USERNAME', 'noreply@bloomsopenhandafh.com');
  * Change the SMTP mailbox password because the previous password
  * was exposed. Put the NEW password here.
  */
-define('BLOOMS_SMTP_PASSWORD', 'YOUR_NEW_SMTP_PASSWORD');
+define('BLOOMS_SMTP_PASSWORD', '@op10928725');
 
 define(
     'BLOOMS_SMTP_FROM_NAME',
