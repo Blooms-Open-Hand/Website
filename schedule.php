@@ -13,11 +13,16 @@ $sent = false;
 $error = '';
 
 /*
- * Used only for logging/debugging.
- * We do not show SMTP credentials or sensitive SMTP
- * information to website visitors.
+ * If you open schedule.php?debug=1 you will see the real
+ * SMTP error on screen (helpful while troubleshooting).
+ * Remove this in production if you prefer.
  */
+$showDebug =
+    isset($_GET['debug']) &&
+    $_GET['debug'] === '1';
+
 $mailSent = false;
+$mailErrorMessage = '';
 
 
 /*
@@ -28,54 +33,27 @@ $mailSent = false;
 
 if ($_SERVER['REQUEST_METHOD'] === 'POST') {
 
-    /*
-     * --------------------------------------------------------
-     * GET FORM VALUES
-     * --------------------------------------------------------
-     */
-
-    $name = trim(
-        $_POST['name'] ?? ''
-    );
-
-    $email = trim(
-        $_POST['email'] ?? ''
-    );
-
-    $phoneNumber = trim(
-        $_POST['phone'] ?? ''
-    );
-
-    $date = trim(
-        $_POST['tour_date'] ?? ''
-    );
-
-    $time = trim(
-        $_POST['tour_time'] ?? ''
-    );
-
+    $name = trim($_POST['name'] ?? '');
+    $email = trim($_POST['email'] ?? '');
+    $phoneNumber = trim($_POST['phone'] ?? '');
+    $date = trim($_POST['tour_date'] ?? '');
+    $time = trim($_POST['tour_time'] ?? '');
     $meetingType = trim(
         $_POST['meeting_type']
         ?? 'Tour / Care Consultation'
     );
-
-    $message = trim(
-        $_POST['message'] ?? ''
-    );
+    $message = trim($_POST['message'] ?? '');
 
 
     /*
      * --------------------------------------------------------
-     * VALIDATE REQUIRED FIELDS
+     * VALIDATION
      * --------------------------------------------------------
      */
 
     if (
         !$name ||
-        !filter_var(
-            $email,
-            FILTER_VALIDATE_EMAIL
-        ) ||
+        !filter_var($email, FILTER_VALIDATE_EMAIL) ||
         !$phoneNumber ||
         !$date ||
         !$time
@@ -83,92 +61,38 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
 
         $error =
             'Please complete your name, email, phone, preferred date, and preferred time.';
-    }
 
-
-    /*
-     * --------------------------------------------------------
-     * VALIDATE DATE
-     * --------------------------------------------------------
-     */
-
-    elseif (
-        !preg_match(
-            '/^\d{4}-\d{2}-\d{2}$/',
-            $date
-        )
+    } elseif (
+        !preg_match('/^\d{4}-\d{2}-\d{2}$/', $date)
     ) {
 
-        $error =
-            'Please select a valid date.';
-    }
+        $error = 'Please select a valid date.';
 
-
-    /*
-     * --------------------------------------------------------
-     * VALIDATE TIME
-     * --------------------------------------------------------
-     */
-
-    elseif (
-        !preg_match(
-            '/^\d{2}:\d{2}$/',
-            $time
-        )
+    } elseif (
+        !preg_match('/^\d{2}:\d{2}$/', $time)
     ) {
 
-        $error =
-            'Please select a valid time.';
-    }
+        $error = 'Please select a valid time.';
 
+    } else {
 
-    /*
-     * --------------------------------------------------------
-     * MAKE SURE DATE/TIME IS VALID
-     * --------------------------------------------------------
-     */
-
-    else {
-
-        $selectedTimestamp = strtotime(
-            $date . ' ' . $time
-        );
-
+        $selectedTimestamp = strtotime($date . ' ' . $time);
 
         if ($selectedTimestamp === false) {
 
-            $error =
-                'Please select a valid date and time.';
-        }
+            $error = 'Please select a valid date and time.';
 
+        } elseif ($selectedTimestamp <= time()) {
 
-        /*
-         * Make sure selected date/time is in future.
-         */
-        elseif (
-            $selectedTimestamp <= time()
-        ) {
+            $error = 'Please select a future date and time.';
 
-            $error =
-                'Please select a future date and time.';
-        }
-
-
-        /*
-         * ----------------------------------------------------
-         * EVERYTHING VALID
-         * ----------------------------------------------------
-         */
-
-        else {
+        } else {
 
             try {
 
-                /*
-                 * ------------------------------------------------
-                 * CREATE TOUR RECORD
-                 * ------------------------------------------------
-                 */
+                /* ---------------------------------------------
+                 * SAVE TO DATABASE
+                 * --------------------------------------------- */
 
                 $title =
                     'Client Request - ' .
@@ -176,16 +100,8 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
                     ' - ' .
                     $name;
 
-
-                /*
-                 * Location comes from site.php.
-                 */
                 $location = $address;
 
-
-                /*
-                 * Description saved in admin database.
-                 */
                 $description =
                     "Client: {$name}\n" .
                     "Email: {$email}\n" .
@@ -195,19 +111,8 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
                     "Preferred time: {$time}\n" .
                     "Message: {$message}";
 
-
-                /*
-                 * Admin instructions.
-                 */
                 $instructions =
                     'New client request. Please review and contact the client to confirm the appointment.';
-
-
-                /*
-                 * ------------------------------------------------
-                 * INSERT INTO TOURS TABLE
-                 * ------------------------------------------------
-                 */
 
                 $stmt = $pdo->prepare("
                     INSERT INTO tours
@@ -221,17 +126,8 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
                         status
                     )
                     VALUES
-                    (
-                        ?,
-                        ?,
-                        ?,
-                        ?,
-                        ?,
-                        ?,
-                        ?
-                    )
+                    (?, ?, ?, ?, ?, ?, ?)
                 ");
-
 
                 $stmt->execute([
                     $title,
@@ -244,65 +140,33 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
                 ]);
 
 
-                /*
-                 * ------------------------------------------------
+                /* ---------------------------------------------
                  * SEND EMAIL NOTIFICATION
-                 * ------------------------------------------------
-                 *
-                 * The database record is already saved.
-                 * Now send notification to:
-                 *
-                 * yosefsahle48@gmail.com
-                 */
+                 * --------------------------------------------- */
 
                 try {
 
-                    /*
-                     * Escape user input before putting it
-                     * inside HTML.
-                     */
-                    $safeName =
-                        front_h($name);
+                    $safeName = front_h($name);
+                    $safeEmail = front_h($email);
+                    $safePhone = front_h($phoneNumber);
 
-                    $safeEmail =
-                        front_h($email);
+                    $safeDate = front_h(
+                        date('F j, Y', strtotime($date))
+                    );
 
-                    $safePhone =
-                        front_h($phoneNumber);
+                    $safeTime = front_h(
+                        date('g:i A', strtotime($time))
+                    );
 
-                    $safeDate =
+                    $safeMeetingType = front_h($meetingType);
+
+                    $safeMessage = nl2br(
                         front_h(
-                            date(
-                                'F j, Y',
-                                strtotime($date)
-                            )
-                        );
+                            $message
+                            ?: 'No additional message provided.'
+                        )
+                    );
 
-                    $safeTime =
-                        front_h(
-                            date(
-                                'g:i A',
-                                strtotime($time)
-                            )
-                        );
-
-                    $safeMeetingType =
-                        front_h($meetingType);
-
-                    $safeMessage =
-                        nl2br(
-                            front_h(
-                                $message
-                                ?: 'No additional message provided.'
-                            )
-                        );
-
-
-                    /*
-                     * ------------------------------------------------
-                     * HTML EMAIL
-                     * ------------------------------------------------
-                     */
 
                     $emailHtml = '
 
@@ -346,8 +210,6 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
                             "
                         >
 
-                            <!-- HEADER -->
-
                             <div
                                 style="
                                     background:#0b6b52;
@@ -377,13 +239,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
                             </div>
 
 
-                            <!-- CONTENT -->
-
-                            <div
-                                style="
-                                    padding:30px;
-                                "
-                            >
+                            <div style="padding:30px;">
 
                                 <p
                                     style="
@@ -398,8 +254,6 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
                                 </p>
 
 
-                                <!-- DETAILS -->
-
                                 <table
                                     style="
                                         width:100%;
@@ -409,177 +263,42 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
                                 >
 
                                     <tr>
-
-                                        <td
-                                            style="
-                                                padding:12px;
-                                                border-bottom:1px solid #e2e8f0;
-                                                font-weight:bold;
-                                                width:35%;
-                                            "
-                                        >
-                                            Name
-                                        </td>
-
-                                        <td
-                                            style="
-                                                padding:12px;
-                                                border-bottom:1px solid #e2e8f0;
-                                            "
-                                        >
-                                            ' . $safeName . '
-                                        </td>
-
+                                        <td style="padding:12px;border-bottom:1px solid #e2e8f0;font-weight:bold;width:35%;">Name</td>
+                                        <td style="padding:12px;border-bottom:1px solid #e2e8f0;">' . $safeName . '</td>
                                     </tr>
 
-
                                     <tr>
-
-                                        <td
-                                            style="
-                                                padding:12px;
-                                                border-bottom:1px solid #e2e8f0;
-                                                font-weight:bold;
-                                            "
-                                        >
-                                            Email
-                                        </td>
-
-                                        <td
-                                            style="
-                                                padding:12px;
-                                                border-bottom:1px solid #e2e8f0;
-                                            "
-                                        >
-                                            ' . $safeEmail . '
-                                        </td>
-
+                                        <td style="padding:12px;border-bottom:1px solid #e2e8f0;font-weight:bold;">Email</td>
+                                        <td style="padding:12px;border-bottom:1px solid #e2e8f0;">' . $safeEmail . '</td>
                                     </tr>
 
-
                                     <tr>
-
-                                        <td
-                                            style="
-                                                padding:12px;
-                                                border-bottom:1px solid #e2e8f0;
-                                                font-weight:bold;
-                                            "
-                                        >
-                                            Phone
-                                        </td>
-
-                                        <td
-                                            style="
-                                                padding:12px;
-                                                border-bottom:1px solid #e2e8f0;
-                                            "
-                                        >
-                                            ' . $safePhone . '
-                                        </td>
-
+                                        <td style="padding:12px;border-bottom:1px solid #e2e8f0;font-weight:bold;">Phone</td>
+                                        <td style="padding:12px;border-bottom:1px solid #e2e8f0;">' . $safePhone . '</td>
                                     </tr>
 
-
                                     <tr>
-
-                                        <td
-                                            style="
-                                                padding:12px;
-                                                border-bottom:1px solid #e2e8f0;
-                                                font-weight:bold;
-                                            "
-                                        >
-                                            Meeting Type
-                                        </td>
-
-                                        <td
-                                            style="
-                                                padding:12px;
-                                                border-bottom:1px solid #e2e8f0;
-                                            "
-                                        >
-                                            ' . $safeMeetingType . '
-                                        </td>
-
+                                        <td style="padding:12px;border-bottom:1px solid #e2e8f0;font-weight:bold;">Meeting Type</td>
+                                        <td style="padding:12px;border-bottom:1px solid #e2e8f0;">' . $safeMeetingType . '</td>
                                     </tr>
 
-
                                     <tr>
-
-                                        <td
-                                            style="
-                                                padding:12px;
-                                                border-bottom:1px solid #e2e8f0;
-                                                font-weight:bold;
-                                            "
-                                        >
-                                            Preferred Date
-                                        </td>
-
-                                        <td
-                                            style="
-                                                padding:12px;
-                                                border-bottom:1px solid #e2e8f0;
-                                            "
-                                        >
-                                            ' . $safeDate . '
-                                        </td>
-
+                                        <td style="padding:12px;border-bottom:1px solid #e2e8f0;font-weight:bold;">Preferred Date</td>
+                                        <td style="padding:12px;border-bottom:1px solid #e2e8f0;">' . $safeDate . '</td>
                                     </tr>
 
-
                                     <tr>
-
-                                        <td
-                                            style="
-                                                padding:12px;
-                                                border-bottom:1px solid #e2e8f0;
-                                                font-weight:bold;
-                                            "
-                                        >
-                                            Preferred Time
-                                        </td>
-
-                                        <td
-                                            style="
-                                                padding:12px;
-                                                border-bottom:1px solid #e2e8f0;
-                                            "
-                                        >
-                                            ' . $safeTime . '
-                                        </td>
-
+                                        <td style="padding:12px;border-bottom:1px solid #e2e8f0;font-weight:bold;">Preferred Time</td>
+                                        <td style="padding:12px;border-bottom:1px solid #e2e8f0;">' . $safeTime . '</td>
                                     </tr>
 
-
                                     <tr>
-
-                                        <td
-                                            style="
-                                                padding:12px;
-                                                font-weight:bold;
-                                                vertical-align:top;
-                                            "
-                                        >
-                                            Message
-                                        </td>
-
-                                        <td
-                                            style="
-                                                padding:12px;
-                                                line-height:1.6;
-                                            "
-                                        >
-                                            ' . $safeMessage . '
-                                        </td>
-
+                                        <td style="padding:12px;font-weight:bold;vertical-align:top;">Message</td>
+                                        <td style="padding:12px;line-height:1.6;">' . $safeMessage . '</td>
                                     </tr>
 
                                 </table>
 
-
-                                <!-- ADMIN NOTICE -->
 
                                 <div
                                     style="
@@ -590,20 +309,12 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
                                         line-height:1.6;
                                     "
                                 >
-
-                                    <strong>
-                                        Admin reminder:
-                                    </strong>
-
+                                    <strong>Admin reminder:</strong>
                                     <br>
-
                                     This request has also been saved
                                     in the website admin Tour Schedule.
-
                                 </div>
 
-
-                                <!-- FOOTER -->
 
                                 <p
                                     style="
@@ -627,68 +338,40 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
                     ';
 
 
-                    /*
-                     * ------------------------------------------------
-                     * SEND SMTP EMAIL
-                     * ------------------------------------------------
-                     */
-
                     $mailSent = blooms_smtp_mail(
-
                         'yosefsahle48@gmail.com',
-
                         'New Schedule Request - ' . $name,
-
                         $emailHtml,
-
                         $email
-
                     );
 
-
-                    /*
-                     * Log successful email.
-                     */
                     if ($mailSent) {
 
                         error_log(
-                            'Blooms Open Hand: Schedule notification email sent successfully for ' .
-                            $email
+                            'Blooms Open Hand: Schedule notification email sent successfully for ' . $email
                         );
                     }
-
 
                 } catch (Throwable $mailError) {
 
                     /*
-                     * IMPORTANT:
-                     *
-                     * The tour was already saved successfully.
-                     * Therefore we do not delete the tour if email
-                     * temporarily fails.
+                     * Tour is already saved. Do not delete it if
+                     * the email temporarily fails.
                      */
+
+                    $mailErrorMessage = $mailError->getMessage();
 
                     error_log(
                         'Blooms Open Hand SMTP notification failed: ' .
-                        $mailError->getMessage()
+                        $mailErrorMessage
                     );
                 }
 
-
-                /*
-                 * ------------------------------------------------
-                 * SUCCESS
-                 * ------------------------------------------------
-                 */
 
                 $sent = true;
 
 
             } catch (Throwable $e) {
-
-                /*
-                 * Database or other server error.
-                 */
 
                 error_log(
                     'Blooms Open Hand schedule submission failed: ' .
@@ -710,51 +393,17 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
 
 <head>
 
-  <!-- FAVICON -->
+  <link rel="icon" type="image/png" href="/favicon-96x96.png" sizes="96x96" />
+  <link rel="icon" type="image/svg+xml" href="/favicon.svg" />
+  <link rel="shortcut icon" href="/favicon.ico" />
+  <link rel="apple-touch-icon" sizes="180x180" href="/apple-touch-icon.png" />
 
-  <link
-    rel="icon"
-    type="image/png"
-    href="/favicon-96x96.png"
-    sizes="96x96"
-  />
+  <meta name="apple-mobile-web-app-title" content="BLOOMS OPEN HAND LLC" />
 
-  <link
-    rel="icon"
-    type="image/svg+xml"
-    href="/favicon.svg"
-  />
-
-  <link
-    rel="shortcut icon"
-    href="/favicon.ico"
-  />
-
-  <link
-    rel="apple-touch-icon"
-    sizes="180x180"
-    href="/apple-touch-icon.png"
-  />
-
-  <meta
-    name="apple-mobile-web-app-title"
-    content="BLOOMS OPEN HAND LLC"
-  />
-
-  <link
-    rel="manifest"
-    href="/site.webmanifest"
-  />
-
-
-  <!-- META -->
+  <link rel="manifest" href="/site.webmanifest" />
 
   <meta charset="UTF-8" />
-
-  <meta
-    name="viewport"
-    content="width=device-width, initial-scale=1.0"
-  />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
 
   <title>
     <?=front_h($pageTitle)?>
@@ -773,40 +422,14 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     content="Schedule a Tour, <?=front_h($organization)?>, Adult Family Home Everett WA, Senior Care Tour, Elder Care Washington"
   />
 
-  <meta
-    name="robots"
-    content="index, follow"
-  />
+  <meta name="robots" content="index, follow" />
 
-  <link
-    rel="canonical"
-    href="https://www.homecareanna.com/schedule.php"
-  />
+  <link rel="canonical" href="https://www.homecareanna.com/schedule.php" />
 
+  <link rel="stylesheet" href="styles.css" />
 
-  <!-- CSS -->
-
-  <link
-    rel="stylesheet"
-    href="styles.css"
-  />
-
-
-  <!-- GOOGLE FONTS -->
-
-  <link
-    rel="preconnect"
-    href="https://fonts.googleapis.com/"
-  />
-
-  <link
-    rel="preconnect"
-    href="https://fonts.gstatic.com/"
-    crossorigin
-  />
-
-
-  <!-- TAILWIND -->
+  <link rel="preconnect" href="https://fonts.googleapis.com/" />
+  <link rel="preconnect" href="https://fonts.gstatic.com/" crossorigin />
 
   <script src="https://cdn.tailwindcss.com"></script>
 
@@ -815,62 +438,34 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
 
 <body>
 
-
-  <!-- ======================================================
-       ANNOUNCEMENT BANNER
-       ====================================================== -->
-
-  <div
-    class="announce-bar"
-    id="announceBar"
-    role="alert"
-  >
+  <div class="announce-bar" id="announceBar" role="alert">
 
     <div class="announce-inner">
 
-      <span
-        class="announce-dot"
-        aria-hidden="true"
-      ></span>
+      <span class="announce-dot" aria-hidden="true"></span>
 
-      <strong>
-        Rooms Available Now
-      </strong>
+      <strong>Rooms Available Now</strong>
 
-      <span class="announce-divider">
-        ·
-      </span>
+      <span class="announce-divider">·</span>
 
       <span>
         We have private rooms open — tours available
         7 days a week, no appointment needed
       </span>
 
-      <a
-        href="tel:<?=front_phone_href($phone)?>"
-        class="announce-cta"
-      >
+      <a href="tel:<?=front_phone_href($phone)?>" class="announce-cta">
         Call <?=front_h($phone)?> →
       </a>
 
     </div>
 
-
-    <button
-      class="announce-close"
-      id="announceClose"
-      aria-label="Close"
-    >
+    <button class="announce-close" id="announceClose" aria-label="Close">
       ✕
     </button>
 
   </div>
 
 
-
-  <!-- ======================================================
-       IDENTITY BAR
-       ====================================================== -->
 
   <div class="identity-bar">
 
@@ -882,45 +477,23 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
           <?=front_h($organization)?>
         </span>
 
-        <span
-          class="identity-divider"
-          aria-hidden="true"
-        >
-          ·
-        </span>
+        <span class="identity-divider" aria-hidden="true">·</span>
 
         <span class="identity-sub">
           Licensed Adult Family Home
         </span>
 
-        <span
-          class="identity-divider"
-          aria-hidden="true"
-        >
-          ·
-        </span>
+        <span class="identity-divider" aria-hidden="true">·</span>
 
         <span class="identity-loc">
           📍
-          <?=front_h(
-              $address
-              ?: "South Everett / North Mill Creek, WA"
-          )?>
+          <?=front_h($address ?: "South Everett / North Mill Creek, WA")?>
         </span>
 
-        <span
-          class="identity-divider identity-divider-hide"
-          aria-hidden="true"
-        >
-          ·
-        </span>
+        <span class="identity-divider identity-divider-hide" aria-hidden="true">·</span>
 
-        <a
-          href="tel:<?=front_phone_href($phone)?>"
-          class="identity-phone"
-        >
-          📞
-          <?=front_h($phone)?>
+        <a href="tel:<?=front_phone_href($phone)?>" class="identity-phone">
+          📞 <?=front_h($phone)?>
         </a>
 
       </div>
@@ -931,107 +504,37 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
 
 
 
-  <!-- ======================================================
-       NAVIGATION
-       ====================================================== -->
-
-  <nav
-    class="navbar"
-    id="navbar"
-    role="navigation"
-    aria-label="Main navigation"
-  >
+  <nav class="navbar" id="navbar" role="navigation" aria-label="Main navigation">
 
     <div class="navbar-inner">
 
-
-      <a
-        href="index.php"
-        class="navbar-logo"
-        aria-label="<?=front_h($organization)?> Home"
-      >
-
-        <img
-          src="Logo.png"
-          alt="<?=front_h($organization)?>"
-          style="height:70px;width:auto;display:block;"
-        />
-
+      <a href="index.php" class="navbar-logo" aria-label="<?=front_h($organization)?> Home">
+        <img src="Logo.png" alt="<?=front_h($organization)?>" style="height:70px;width:auto;display:block;" />
       </a>
 
-
-      <ul
-        class="navbar-links"
-        role="list"
-      >
-
-        <li>
-          <a href="index.php">
-            Home
-          </a>
-        </li>
-
-        <li>
-          <a href="about.php">
-            About Us
-          </a>
-        </li>
-
-        <li>
-          <a href="services.php">
-            Services
-          </a>
-        </li>
-
-        <li>
-          <a href="gallery.php">
-            Gallery
-          </a>
-        </li>
-
-        <li>
-          <a href="blog.php">
-            Blog
-          </a>
-        </li>
-
-        <li>
-          <a href="contact.php">
-            Contact
-          </a>
-        </li>
-
+      <ul class="navbar-links" role="list">
+        <li><a href="index.php">Home</a></li>
+        <li><a href="about.php">About Us</a></li>
+        <li><a href="services.php">Services</a></li>
+        <li><a href="gallery.php">Gallery</a></li>
+        <li><a href="blog.php">Blog</a></li>
+        <li><a href="contact.php">Contact</a></li>
       </ul>
-
 
       <div class="navbar-cta">
 
-        <a
-          href="tel:<?=front_phone_href($phone)?>"
-          class="navbar-phone"
-        >
-
-          <svg
-            viewBox="0 0 24 24"
-            aria-hidden="true"
-          >
+        <a href="tel:<?=front_phone_href($phone)?>" class="navbar-phone">
+          <svg viewBox="0 0 24 24" aria-hidden="true">
             <path d="M6.6 10.8c1.4 2.8 3.8 5.1 6.6 6.6l2.2-2.2c.3-.3.7-.4 1-.2 1.1.4 2.3.6 3.6.6.6 0 1 .4 1 1V20c0 .6-.4 1-1 1-9.4 0-17-7.6-17-17 0-.6.4-1 1-1h3.5c.6 0 1 .4 1 1 0 1.3.2 2.5.6 3.6.1.3 0 .7-.2 1L6.6 10.8z"/>
           </svg>
-
           <?=front_h($phone)?>
-
         </a>
 
-
-        <a
-          href="schedule.php"
-          class="btn btn-primary active"
-        >
+        <a href="schedule.php" class="btn btn-primary active">
           Schedule a Tour
         </a>
 
       </div>
-
 
       <button
         class="hamburger"
@@ -1040,11 +543,9 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
         aria-expanded="false"
         aria-controls="mobileMenu"
       >
-
         <span></span>
         <span></span>
         <span></span>
-
       </button>
 
     </div>
@@ -1053,133 +554,49 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
 
 
 
-  <!-- ======================================================
-       MOBILE MENU
-       ====================================================== -->
+  <div class="mobile-menu" id="mobileMenu" role="menu">
 
-  <div
-    class="mobile-menu"
-    id="mobileMenu"
-    role="menu"
-  >
-
-    <a
-      href="index.php"
-      role="menuitem"
-    >
-      Home
-    </a>
-
-    <a
-      href="about.php"
-      role="menuitem"
-    >
-      About Us
-    </a>
-
-    <a
-      href="services.php"
-      role="menuitem"
-    >
-      Services
-    </a>
-
-    <a
-      href="gallery.php"
-      role="menuitem"
-    >
-      Gallery
-    </a>
-
-    <a
-      href="blog.php"
-      role="menuitem"
-    >
-      Blog
-    </a>
-
-    <a
-      href="contact.php"
-      role="menuitem"
-    >
-      Contact
-    </a>
-
+    <a href="index.php" role="menuitem">Home</a>
+    <a href="about.php" role="menuitem">About Us</a>
+    <a href="services.php" role="menuitem">Services</a>
+    <a href="gallery.php" role="menuitem">Gallery</a>
+    <a href="blog.php" role="menuitem">Blog</a>
+    <a href="contact.php" role="menuitem">Contact</a>
 
     <div class="mobile-menu-cta">
-
-      <a
-        href="tel:<?=front_phone_href($phone)?>"
-        class="btn btn-outline"
-      >
+      <a href="tel:<?=front_phone_href($phone)?>" class="btn btn-outline">
         📞 <?=front_h($phone)?>
       </a>
-
-      <a
-        href="schedule.php"
-        class="btn btn-primary"
-      >
+      <a href="schedule.php" class="btn btn-primary">
         Schedule a Tour
       </a>
-
     </div>
 
   </div>
 
 
 
-  <!-- ======================================================
-       MAIN
-       ====================================================== -->
-
   <main class="page-top">
 
-
-    <!-- ====================================================
-         PAGE HERO
-         ==================================================== -->
-
-    <section
-      class="page-hero"
-      aria-label="Schedule page header"
-    >
+    <section class="page-hero" aria-label="Schedule page header">
 
       <div class="container">
 
-        <nav
-          class="breadcrumb"
-          aria-label="Breadcrumb"
-        >
-
-          <a href="index.php">
-            Home
-          </a>
-
-          <span aria-hidden="true">
-            ›
-          </span>
-
-          <span aria-current="page">
-            Schedule a Tour
-          </span>
-
+        <nav class="breadcrumb" aria-label="Breadcrumb">
+          <a href="index.php">Home</a>
+          <span aria-hidden="true">›</span>
+          <span aria-current="page">Schedule a Tour</span>
         </nav>
 
-
         <h1 class="section-title text-6xl">
-
           Let&rsquo;s find a time that works
           for your family.
-
         </h1>
 
-
         <p>
-
           Request a tour or care consultation and
           our team will review your preferred time
           and follow up to confirm the appointment.
-
         </p>
 
       </div>
@@ -1188,230 +605,112 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
 
 
 
-    <!-- ====================================================
-         SCHEDULE MAIN
-         ==================================================== -->
-
-    <section
-      class="section contact-section"
-      aria-labelledby="schedule-heading"
-    >
+    <section class="section contact-section" aria-labelledby="schedule-heading">
 
       <div class="container">
 
         <div class="contact-grid">
 
 
-          <!-- ==================================================
-               LEFT INFORMATION
-               ================================================== -->
-
           <div class="fade-in">
 
-            <span class="section-label">
-              A simple next step
-            </span>
+            <span class="section-label">A simple next step</span>
 
-
-            <h2
-              id="schedule-heading"
-              class="section-title"
-            >
+            <h2 id="schedule-heading" class="section-title">
               Come experience the home.
             </h2>
 
-
             <p>
-
               A visit gives families an opportunity
               to see our residential setting, ask
               questions, discuss care needs, and learn
               whether <?=front_h($organization)?>
               is the right fit.
-
             </p>
 
 
             <div class="contact-items">
 
-
-              <!-- 24-HOUR CARE -->
-
               <div class="contact-item">
-
-                <div
-                  class="contact-item-icon"
-                  aria-hidden="true"
-                >
-
+                <div class="contact-item-icon" aria-hidden="true">
                   <svg viewBox="0 0 24 24">
                     <path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm1 15h-2v-2h2v2zm0-4h-2V7h2v6z"/>
                   </svg>
-
                 </div>
-
-
                 <div class="contact-item-body">
-
-                  <strong>
-                    24-hour resident care
-                  </strong>
-
-                  <span>
-                    Staffed and operating around the clock.
-                  </span>
-
+                  <strong>24-hour resident care</strong>
+                  <span>Staffed and operating around the clock.</span>
                 </div>
-
               </div>
 
-
-              <!-- LICENSED BEDS -->
-
               <div class="contact-item">
-
-                <div
-                  class="contact-item-icon"
-                  aria-hidden="true"
-                >
-
+                <div class="contact-item-icon" aria-hidden="true">
                   <svg viewBox="0 0 24 24">
                     <path d="M10 20v-6h4v6h5v-8h3L12 3 2 12h3v8z"/>
                   </svg>
-
                 </div>
-
-
                 <div class="contact-item-body">
-
-                  <strong>
-                    6 licensed beds
-                  </strong>
-
-                  <span>
-                    A small, familiar home environment.
-                  </span>
-
+                  <strong>6 licensed beds</strong>
+                  <span>A small, familiar home environment.</span>
                 </div>
-
               </div>
 
-
-              <!-- OWNER LED -->
-
               <div class="contact-item">
-
-                <div
-                  class="contact-item-icon"
-                  aria-hidden="true"
-                >
-
+                <div class="contact-item-icon" aria-hidden="true">
                   <svg viewBox="0 0 24 24">
                     <path d="M12 12c2.21 0 4-1.79 4-4s-1.79-4-4-4-4 1.79-4 4 1.79 4 4 4zm0 2c-2.67 0-8 1.34-8 4v2h16v-2c0-2.66-5.33-4-8-4z"/>
                   </svg>
-
                 </div>
-
-
                 <div class="contact-item-body">
-
-                  <strong>
-                    Owner-led communication
-                  </strong>
-
-                  <span>
-                    Direct and responsive family support.
-                  </span>
-
+                  <strong>Owner-led communication</strong>
+                  <span>Direct and responsive family support.</span>
                 </div>
-
               </div>
 
-
-              <!-- PHONE -->
-
               <div class="contact-item">
-
-                <div
-                  class="contact-item-icon"
-                  aria-hidden="true"
-                >
-
+                <div class="contact-item-icon" aria-hidden="true">
                   <svg viewBox="0 0 24 24">
                     <path d="M6.6 10.8c1.4 2.8 3.8 5.1 6.6 6.6l2.2-2.2c.3-.3.7-.4 1-.2 1.1.4 2.3.6 3.6.6.6 0 1 .4 1 1V20c0 .6-.4 1-1 1-9.4 0-17-7.6-17-17 0-.6.4-1 1-1h3.5c.6 0 1 .4 1 1 0 1.3.2 2.5.6 3.6.1.3 0 .7-.2 1L6.6 10.8z"/>
                   </svg>
-
                 </div>
-
-
                 <div class="contact-item-body">
-
-                  <strong>
-                    Prefer to talk?
-                  </strong>
-
-                  <a
-                    href="tel:<?=front_phone_href($phone)?>"
-                  >
+                  <strong>Prefer to talk?</strong>
+                  <a href="tel:<?=front_phone_href($phone)?>">
                     <?=front_h($phone)?>
                   </a>
-
                 </div>
-
               </div>
 
             </div>
 
-
-            <!-- CLICK TO CALL -->
 
             <a
               href="tel:<?=front_phone_href($phone)?>"
               class="call-btn"
               aria-label="Call <?=front_h($organization)?> at <?=front_h($phone)?>"
             >
-
-              <svg
-                viewBox="0 0 24 24"
-                aria-hidden="true"
-              >
-
+              <svg viewBox="0 0 24 24" aria-hidden="true">
                 <path d="M6.6 10.8c1.4 2.8 3.8 5.1 6.6 6.6l2.2-2.2c.3-.3.7-.4 1-.2 1.1.4 2.3.6 3.6.6.6 0 1 .4 1 1V20c0 .6-.4 1-1 1-9.4 0-17-7.6-17-17 0-.6.4-1 1-1h3.5c.6 0 1 .4 1 1 0 1.3.2 2.5.6 3.6.1.3 0 .7-.2 1L6.6 10.8z"/>
-
               </svg>
-
-              Tap to Call:
-              <?=front_h($phone)?>
-
+              Tap to Call: <?=front_h($phone)?>
             </a>
 
           </div>
 
 
 
-          <!-- ==================================================
-               FORM CARD
-               ================================================== -->
-
           <div class="fade-in fade-in-delay-1">
 
             <div class="contact-form-card">
 
-              <h3>
-                Request a tour or meeting
-              </h3>
-
+              <h3>Request a tour or meeting</h3>
 
               <p>
-
                 Your request will be sent to our scheduling
                 database for review. We&rsquo;ll follow up
                 to confirm the appointment.
-
               </p>
 
-
-              <!-- SUCCESS MESSAGE -->
 
               <?php if ($sent): ?>
 
@@ -1420,18 +719,13 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
                   role="status"
                 >
 
-                  <strong class="block">
-                    Request received.
-                  </strong>
+                  <strong class="block">Request received.</strong>
 
                   <span>
-
-                    Thank you,
-                    <?=front_h($name)?>.
+                    Thank you, <?=front_h($name)?>.
                     We received your preferred schedule
                     and will contact you to confirm
                     the appointment.
-
                   </span>
 
                 </div>
@@ -1439,40 +733,37 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
               <?php endif; ?>
 
 
-              <!-- ERROR MESSAGE -->
-
               <?php if ($error): ?>
 
                 <div
                   class="mt-5 rounded-xl border border-red-200 bg-red-50 p-4 text-red-700"
                   role="alert"
                 >
-
                   <?=front_h($error)?>
-
                 </div>
 
               <?php endif; ?>
 
 
-              <!-- FORM -->
+              <?php if ($showDebug && $mailErrorMessage): ?>
 
-              <form
-                id="scheduleForm"
-                method="POST"
-                novalidate
-                aria-label="Schedule form"
-              >
+                <div
+                  class="mt-5 rounded-xl border border-amber-300 bg-amber-50 p-4 text-amber-900"
+                  role="alert"
+                >
+                  <strong class="block">SMTP debug:</strong>
+                  <code style="word-break:break-word;">
+                    <?=front_h($mailErrorMessage)?>
+                  </code>
+                </div>
+
+              <?php endif; ?>
 
 
-                <!-- NAME -->
+              <form id="scheduleForm" method="POST" novalidate aria-label="Schedule form">
 
                 <div class="form-group">
-
-                  <label for="name">
-                    Your Name *
-                  </label>
-
+                  <label for="name">Your Name *</label>
                   <input
                     type="text"
                     id="name"
@@ -1482,18 +773,11 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
                     required
                     autocomplete="name"
                   />
-
                 </div>
 
 
-                <!-- EMAIL -->
-
                 <div class="form-group">
-
-                  <label for="email">
-                    Email Address *
-                  </label>
-
+                  <label for="email">Email Address *</label>
                   <input
                     type="email"
                     id="email"
@@ -1503,18 +787,11 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
                     required
                     autocomplete="email"
                   />
-
                 </div>
 
 
-                <!-- PHONE -->
-
                 <div class="form-group">
-
-                  <label for="phone">
-                    Phone Number *
-                  </label>
-
+                  <label for="phone">Phone Number *</label>
                   <input
                     type="tel"
                     id="phone"
@@ -1524,57 +801,24 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
                     required
                     autocomplete="tel"
                   />
-
                 </div>
 
-
-                <!-- MEETING TYPE -->
 
                 <div class="form-group">
-
-                  <label for="meeting_type">
-                    What would you like to schedule?
-                  </label>
-
-                  <select
-                    id="meeting_type"
-                    name="meeting_type"
-                  >
-
-                    <option value="Tour / Care Consultation">
-                      Tour / Care Consultation
-                    </option>
-
-                    <option value="Care Consultation">
-                      Care Consultation
-                    </option>
-
-                    <option value="Home Tour">
-                      Home Tour
-                    </option>
-
-                    <option value="Respite Care Discussion">
-                      Respite Care Discussion
-                    </option>
-
+                  <label for="meeting_type">What would you like to schedule?</label>
+                  <select id="meeting_type" name="meeting_type">
+                    <option value="Tour / Care Consultation">Tour / Care Consultation</option>
+                    <option value="Care Consultation">Care Consultation</option>
+                    <option value="Home Tour">Home Tour</option>
+                    <option value="Respite Care Discussion">Respite Care Discussion</option>
                   </select>
-
                 </div>
 
-
-                <!-- DATE/TIME -->
 
                 <div class="form-row">
 
-
-                  <!-- DATE -->
-
                   <div class="form-group">
-
-                    <label for="tour_date">
-                      Preferred Date *
-                    </label>
-
+                    <label for="tour_date">Preferred Date *</label>
                     <input
                       type="date"
                       id="tour_date"
@@ -1583,25 +827,14 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
                       value="<?= $sent ? '' : front_h($_POST['tour_date'] ?? '') ?>"
                       required
                     />
-
-                    <p
-                      id="dateError"
-                      class="hidden mt-2 text-sm text-red-600"
-                    >
+                    <p id="dateError" class="hidden mt-2 text-sm text-red-600">
                       Please select today or a future date.
                     </p>
-
                   </div>
 
 
-                  <!-- TIME -->
-
                   <div class="form-group">
-
-                    <label for="tour_time">
-                      Preferred Time *
-                    </label>
-
+                    <label for="tour_time">Preferred Time *</label>
                     <input
                       type="time"
                       id="tour_time"
@@ -1609,56 +842,30 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
                       value="<?= $sent ? '' : front_h($_POST['tour_time'] ?? '') ?>"
                       required
                     />
-
-                    <p
-                      id="timeError"
-                      class="hidden mt-2 text-sm text-red-600"
-                    >
+                    <p id="timeError" class="hidden mt-2 text-sm text-red-600">
                       Please select a future date and time.
                     </p>
-
                   </div>
 
                 </div>
 
 
-                <!-- MESSAGE -->
-
                 <div class="form-group">
-
                   <label for="message">
-
                     Tell us a little about your needs
-
-                    <span
-                      style="
-                        font-weight:400;
-                        color:var(--text-light)
-                      "
-                    >
+                    <span style="font-weight:400;color:var(--text-light)">
                       (optional)
                     </span>
-
                   </label>
-
-
                   <textarea
                     id="message"
                     name="message"
                     placeholder="Share any questions, care needs, or context that would help us prepare for your visit..."
                   ><?= $sent ? '' : front_h($_POST['message'] ?? '') ?></textarea>
-
                 </div>
 
 
-                <!-- SUBMIT -->
-
-                <button
-                  type="submit"
-                  id="submitButton"
-                  class="btn btn-primary form-submit"
-                >
-
+                <button type="submit" id="submitButton" class="btn btn-primary form-submit">
                   <svg
                     viewBox="0 0 24 24"
                     width="18"
@@ -1667,31 +874,16 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
                     aria-hidden="true"
                     style="margin-right:0.25rem;"
                   >
-
                     <path d="M2.01 21L23 12 2.01 3 2 10l15 2-15 2z"/>
-
                   </svg>
-
                   Submit Schedule Request
-
                 </button>
 
 
-                <!-- PRIVACY -->
-
-                <p
-                  style="
-                    font-size:0.78rem;
-                    color:var(--text-light);
-                    margin-top:0.75rem;
-                    text-align:center;
-                  "
-                >
-
+                <p style="font-size:0.78rem;color:var(--text-light);margin-top:0.75rem;text-align:center;">
                   We respect your privacy.
                   Your information is never shared
                   with third parties.
-
                 </p>
 
               </form>
@@ -1710,23 +902,12 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
 
 
 
-  <!-- ======================================================
-       FOOTER
-       ====================================================== -->
-
   <?php include 'footer.php'; ?>
 
-
-
-  <!-- JAVASCRIPT -->
 
   <script src="script.js"></script>
 
 
-
-  <!-- ======================================================
-       SUCCESS OVERLAY
-       ====================================================== -->
 
   <div
     id="formSuccess"
@@ -1754,9 +935,6 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
       "
     >
 
-
-      <!-- CHECK ICON -->
-
       <div
         id="checkAnim"
         style="
@@ -1781,7 +959,6 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
           stroke-linecap="round"
           stroke-linejoin="round"
         >
-
           <polyline
             points="20 6 9 17 4 12"
             style="
@@ -1790,7 +967,6 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
               animation:drawCheck 0.5s 0.2s ease forwards;
             "
           />
-
         </svg>
 
       </div>
@@ -1816,19 +992,13 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
           margin-bottom:1.75rem;
         "
       >
-
         Thank you<?= $sent && $name ? ', '.front_h($name) : '' ?>.
-
         Your tour or care consultation request
         has been received.
-
         Our team will follow up to confirm
         the appointment.
-
       </p>
 
-
-      <!-- CALL BUTTON -->
 
       <a
         href="tel:<?=front_phone_href($phone)?>"
@@ -1844,14 +1014,9 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
           margin-bottom:0.75rem;
         "
       >
-
-        📞 Call Us Now:
-        <?=front_h($phone)?>
-
+        📞 Call Us Now: <?=front_h($phone)?>
       </a>
 
-
-      <!-- CLOSE -->
 
       <button
         onclick="document.getElementById('formSuccess').style.display='none';"
@@ -1873,453 +1038,159 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
 
 
 
-  <!-- ======================================================
-       SUCCESS ANIMATIONS
-       ====================================================== -->
-
   <style>
 
     @keyframes popIn {
-
-      from {
-        transform:scale(0.8);
-        opacity:0;
-      }
-
-      to {
-        transform:scale(1);
-        opacity:1;
-      }
-
+      from { transform:scale(0.8); opacity:0; }
+      to   { transform:scale(1);   opacity:1; }
     }
 
-
     @keyframes drawCheck {
-
-      to {
-        stroke-dashoffset:0;
-      }
-
+      to { stroke-dashoffset:0; }
     }
 
   </style>
 
 
 
-  <!-- ======================================================
-       DATE/TIME JAVASCRIPT
-       ====================================================== -->
-
   <script>
 
-    document.addEventListener(
-      'DOMContentLoaded',
-      function () {
+    document.addEventListener('DOMContentLoaded', function () {
 
-        const form =
-          document.getElementById(
-            'scheduleForm'
-          );
+      const form = document.getElementById('scheduleForm');
+      const dateInput = document.getElementById('tour_date');
+      const timeInput = document.getElementById('tour_time');
+      const dateError = document.getElementById('dateError');
+      const timeError = document.getElementById('timeError');
 
-        const dateInput =
-          document.getElementById(
-            'tour_date'
-          );
+      function getToday() {
+        const now = new Date();
+        const year = now.getFullYear();
+        const month = String(now.getMonth() + 1).padStart(2, '0');
+        const day = String(now.getDate()).padStart(2, '0');
+        return year + '-' + month + '-' + day;
+      }
 
-        const timeInput =
-          document.getElementById(
-            'tour_time'
-          );
+      function updateMinimumDateTime() {
 
-        const dateError =
-          document.getElementById(
-            'dateError'
-          );
+        const today = getToday();
+        dateInput.min = today;
 
-        const timeError =
-          document.getElementById(
-            'timeError'
-          );
+        if (dateInput.value === today) {
 
+          const now = new Date();
+          const hours = String(now.getHours()).padStart(2, '0');
+          const minutes = String(now.getMinutes()).padStart(2, '0');
+          timeInput.min = hours + ':' + minutes;
 
-        /*
-         * ======================================================
-         * GET TODAY
-         * ======================================================
-         */
-
-        function getToday() {
-
-          const now =
-            new Date();
-
-          const year =
-            now.getFullYear();
-
-          const month =
-            String(
-              now.getMonth() + 1
-            ).padStart(2, '0');
-
-          const day =
-            String(
-              now.getDate()
-            ).padStart(2, '0');
-
-          return (
-            year +
-            '-' +
-            month +
-            '-' +
-            day
-          );
+        } else {
+          timeInput.removeAttribute('min');
         }
+      }
 
+      function validateDateTime(showErrors = true) {
 
-        /*
-         * ======================================================
-         * UPDATE MINIMUM DATE/TIME
-         * ======================================================
-         */
+        const selectedDate = dateInput.value;
+        const selectedTime = timeInput.value;
 
-        function updateMinimumDateTime() {
+        dateError.classList.add('hidden');
+        timeError.classList.add('hidden');
+        dateInput.classList.remove('border-red-500');
+        timeInput.classList.remove('border-red-500');
 
-          const today =
-            getToday();
-
-          dateInput.min =
-            today;
-
-
-          if (
-            dateInput.value === today
-          ) {
-
-            const now =
-              new Date();
-
-            const hours =
-              String(
-                now.getHours()
-              ).padStart(2, '0');
-
-            const minutes =
-              String(
-                now.getMinutes()
-              ).padStart(2, '0');
-
-            timeInput.min =
-              hours +
-              ':' +
-              minutes;
-
-          } else {
-
-            timeInput.removeAttribute(
-              'min'
-            );
-          }
-        }
-
-
-        /*
-         * ======================================================
-         * VALIDATE DATE/TIME
-         * ======================================================
-         */
-
-        function validateDateTime(
-          showErrors = true
-        ) {
-
-          const selectedDate =
-            dateInput.value;
-
-          const selectedTime =
-            timeInput.value;
-
-
-          dateError.classList.add(
-            'hidden'
-          );
-
-          timeError.classList.add(
-            'hidden'
-          );
-
-          dateInput.classList.remove(
-            'border-red-500'
-          );
-
-          timeInput.classList.remove(
-            'border-red-500'
-          );
-
-
-          if (
-            !selectedDate ||
-            !selectedTime
-          ) {
-
-            return true;
-          }
-
-
-          const today =
-            getToday();
-
-
-          /*
-           * Date cannot be before today.
-           */
-
-          if (
-            selectedDate < today
-          ) {
-
-            if (showErrors) {
-
-              dateError.textContent =
-                'Please select today or a future date.';
-
-              dateError.classList.remove(
-                'hidden'
-              );
-
-              dateInput.classList.add(
-                'border-red-500'
-              );
-            }
-
-            return false;
-          }
-
-
-          /*
-           * Check selected date/time.
-           */
-
-          const selectedDateTime =
-            new Date(
-              selectedDate +
-              'T' +
-              selectedTime
-            );
-
-
-          const now =
-            new Date();
-
-
-          if (
-            selectedDateTime <= now
-          ) {
-
-            if (showErrors) {
-
-              timeError.textContent =
-                'Please select a future date and time.';
-
-              timeError.classList.remove(
-                'hidden'
-              );
-
-              timeInput.classList.add(
-                'border-red-500'
-              );
-            }
-
-            return false;
-          }
-
-
+        if (!selectedDate || !selectedTime) {
           return true;
         }
 
+        const today = getToday();
 
-        /*
-         * ======================================================
-         * DATE CHANGE
-         * ======================================================
-         */
-
-        dateInput.addEventListener(
-          'change',
-          function () {
-
-            updateMinimumDateTime();
-
-            validateDateTime(true);
-
+        if (selectedDate < today) {
+          if (showErrors) {
+            dateError.textContent = 'Please select today or a future date.';
+            dateError.classList.remove('hidden');
+            dateInput.classList.add('border-red-500');
           }
-        );
+          return false;
+        }
 
+        const selectedDateTime = new Date(selectedDate + 'T' + selectedTime);
+        const now = new Date();
 
-        /*
-         * ======================================================
-         * TIME CHANGE
-         * ======================================================
-         */
-
-        timeInput.addEventListener(
-          'change',
-          function () {
-
-            validateDateTime(true);
-
+        if (selectedDateTime <= now) {
+          if (showErrors) {
+            timeError.textContent = 'Please select a future date and time.';
+            timeError.classList.remove('hidden');
+            timeInput.classList.add('border-red-500');
           }
-        );
+          return false;
+        }
 
+        return true;
+      }
 
-        /*
-         * ======================================================
-         * DATE INPUT
-         * ======================================================
-         */
+      dateInput.addEventListener('change', function () {
+        updateMinimumDateTime();
+        validateDateTime(true);
+      });
 
-        dateInput.addEventListener(
-          'input',
-          function () {
+      timeInput.addEventListener('change', function () {
+        validateDateTime(true);
+      });
 
-            updateMinimumDateTime();
+      dateInput.addEventListener('input', function () {
+        updateMinimumDateTime();
+        validateDateTime(false);
+      });
 
-            validateDateTime(false);
+      timeInput.addEventListener('input', function () {
+        validateDateTime(false);
+      });
 
-          }
-        );
-
-
-        /*
-         * ======================================================
-         * TIME INPUT
-         * ======================================================
-         */
-
-        timeInput.addEventListener(
-          'input',
-          function () {
-
-            validateDateTime(false);
-
-          }
-        );
-
-
-        /*
-         * ======================================================
-         * FORM SUBMIT
-         * ======================================================
-         */
-
-        form.addEventListener(
-          'submit',
-          function (event) {
-
-            updateMinimumDateTime();
-
-
-            const valid =
-              validateDateTime(true);
-
-
-            if (!valid) {
-
-              event.preventDefault();
-
-
-              const errorField =
-                document.querySelector(
-                  '.border-red-500'
-                );
-
-
-              if (errorField) {
-
-                errorField.scrollIntoView({
-                  behavior:'smooth',
-                  block:'center'
-                });
-
-                errorField.focus();
-              }
-
-
-              return false;
-            }
-
-
-            /*
-             * Prevent double submission.
-             */
-
-            const btn =
-              document.getElementById(
-                'submitButton'
-              );
-
-
-            if (btn) {
-
-              btn.innerHTML =
-                'Sending...';
-
-              btn.disabled =
-                true;
-            }
-
-          }
-        );
-
-
-        /*
-         * Initial date/time setup.
-         */
+      form.addEventListener('submit', function (event) {
 
         updateMinimumDateTime();
 
+        const valid = validateDateTime(true);
 
-        /*
-         * Keep current time updated.
-         */
+        if (!valid) {
 
-        setInterval(
-          function () {
+          event.preventDefault();
 
-            updateMinimumDateTime();
+          const errorField = document.querySelector('.border-red-500');
 
-            if (
-              dateInput.value &&
-              timeInput.value
-            ) {
-
-              validateDateTime(false);
-
-            }
-
-          },
-          30000
-        );
-
-
-        /*
-         * Clear form after successful submission.
-         */
-
-        if (
-          <?= $sent ? 'true' : 'false' ?>
-        ) {
-
-          if (form) {
-            form.reset();
+          if (errorField) {
+            errorField.scrollIntoView({ behavior:'smooth', block:'center' });
+            errorField.focus();
           }
 
+          return false;
         }
 
+        const btn = document.getElementById('submitButton');
+
+        if (btn) {
+          btn.innerHTML = 'Sending...';
+          btn.disabled = true;
+        }
+
+      });
+
+      updateMinimumDateTime();
+
+      setInterval(function () {
+        updateMinimumDateTime();
+        if (dateInput.value && timeInput.value) {
+          validateDateTime(false);
+        }
+      }, 30000);
+
+      if (<?= $sent ? 'true' : 'false' ?>) {
+        if (form) { form.reset(); }
       }
-    );
+
+    });
 
   </script>
-
 
 </body>
 

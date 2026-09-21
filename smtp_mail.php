@@ -3,7 +3,8 @@
 /**
  * Simple SMTP mailer for Blooms Open Hand AFH.
  *
- * Uses implicit TLS (SSL) on SMTP port 465.
+ * Uses implicit TLS (SSL) on SMTP port 465 by default.
+ * Falls back to STARTTLS on port 587 if 465 fails.
  * No Composer dependency required.
  */
 
@@ -14,8 +15,8 @@ define('BLOOMS_SMTP_USERNAME', 'noreply@bloomsopenhandafh.com');
 
 /*
  * IMPORTANT:
- * Change the SMTP mailbox password because the previous password
- * was exposed. Put the NEW password here.
+ * Put the REAL password for noreply@bloomsopenhandafh.com here.
+ * This is the cPanel / email account password, NOT the placeholder.
  */
 define('BLOOMS_SMTP_PASSWORD', '@op10928725');
 
@@ -25,6 +26,12 @@ define(
 );
 
 define('BLOOMS_SMTP_TIMEOUT', 20);
+
+/*
+ * Set to true only while debugging. Set back to false in production.
+ * When true, detailed SMTP errors are written to the PHP error log.
+ */
+define('BLOOMS_SMTP_DEBUG', true);
 
 
 /**
@@ -112,12 +119,98 @@ function blooms_smtp_command(
 
 
 /**
+ * Open a socket to the SMTP server.
+ *
+ * @param string $scheme  'ssl' or 'tls'
+ * @param int    $port
+ * @return resource
+ */
+function blooms_smtp_open_socket(string $scheme, int $port)
+{
+    $host = BLOOMS_SMTP_HOST;
+
+    $errno = 0;
+    $errstr = '';
+
+    /*
+     * Build SSL context.
+     *
+     * We keep certificate verification ON in production.
+     * If your host has a broken CA bundle, temporarily set
+     * verify_peer / verify_peer_name to false to confirm.
+     */
+    $context = stream_context_create([
+        'ssl' => [
+
+            'verify_peer' => true,
+            'verify_peer_name' => true,
+            'allow_self_signed' => false,
+
+            'peer_name' => $host,
+
+            'SNI_enabled' => true,
+
+            /*
+             * Allow TLS 1.2 and above.
+             */
+            'crypto_method' =>
+                STREAM_CRYPTO_METHOD_TLS_CLIENT
+                | STREAM_CRYPTO_METHOD_TLSv1_2_CLIENT
+                | STREAM_CRYPTO_METHOD_TLSv1_3_CLIENT,
+        ]
+    ]);
+
+    /*
+     * Port 465 uses implicit SSL.
+     * Port 587 uses STARTTLS (plain connect, then crypto).
+     */
+    $remote = ($scheme === 'ssl')
+        ? 'ssl://' . $host . ':' . $port
+        : 'tcp://'  . $host . ':' . $port;
+
+    /*
+     * NOTE: we do NOT use @ here, so real errors surface.
+     * We still capture $errstr / $errno for our own reporting.
+     */
+    $socket = stream_socket_client(
+        $remote,
+        $errno,
+        $errstr,
+        BLOOMS_SMTP_TIMEOUT,
+        STREAM_CLIENT_CONNECT,
+        $context
+    );
+
+    if (!$socket) {
+
+        throw new RuntimeException(
+            'Could not connect to SMTP server ' .
+            $host . ':' . $port .
+            ' — ' .
+            ($errstr ?: 'connection failed') .
+            ' (' . $errno . ')'
+        );
+    }
+
+    stream_set_timeout(
+        $socket,
+        BLOOMS_SMTP_TIMEOUT
+    );
+
+    return $socket;
+}
+
+
+/**
  * Send an HTML email using Blooms Open Hand SMTP.
  *
+ * Tries port 465 (implicit SSL) first. If that fails,
+ * tries port 587 with STARTTLS.
+ *
  * @param string      $to       Recipient email
- * @param string      $subject Email subject
+ * @param string      $subject  Email subject
  * @param string      $htmlBody HTML email body
- * @param string|null $replyTo Reply-To email address
+ * @param string|null $replyTo  Reply-To email address
  *
  * @return bool
  */
@@ -150,92 +243,117 @@ function blooms_smtp_mail(
     }
 
 
-    $host = BLOOMS_SMTP_HOST;
-    $port = BLOOMS_SMTP_PORT;
-
-    $errno = 0;
-    $errstr = '';
-
-
     /*
-     * Port 465 uses implicit SSL/TLS.
+     * Make sure password has actually been set.
      */
-    $context = stream_context_create([
-        'ssl' => [
-
-            /*
-             * Verify the SMTP server SSL certificate.
-             */
-            'verify_peer' => true,
-            'verify_peer_name' => true,
-            'allow_self_signed' => false,
-
-            /*
-             * Make sure the certificate is checked against
-             * the SMTP hostname.
-             */
-            'peer_name' => $host,
-
-            /*
-             * Enable SNI.
-             */
-            'SNI_enabled' => true,
-        ]
-    ]);
-
-
-    /*
-     * Open SSL SMTP connection.
-     */
-    $socket = @stream_socket_client(
-        'ssl://' . $host . ':' . $port,
-        $errno,
-        $errstr,
-        BLOOMS_SMTP_TIMEOUT,
-        STREAM_CLIENT_CONNECT,
-        $context
-    );
-
-
-    if (!$socket) {
+    if (
+        BLOOMS_SMTP_PASSWORD === '' ||
+        BLOOMS_SMTP_PASSWORD === 'PUT_THE_REAL_PASSWORD_HERE' ||
+        BLOOMS_SMTP_PASSWORD === 'YOUR_NEW_SMTP_PASSWORD'
+    ) {
 
         throw new RuntimeException(
-            'Could not connect to SMTP server: ' .
-            ($errstr ?: 'connection failed') .
-            ' (' .
-            $errno .
-            ')'
+            'SMTP password has not been set in smtp_mail.php.'
         );
     }
 
 
     /*
-     * Set socket timeout.
+     * Make sure OpenSSL is available.
      */
-    stream_set_timeout(
-        $socket,
-        BLOOMS_SMTP_TIMEOUT
-    );
+    if (
+        !extension_loaded('openssl') ||
+        !in_array('ssl', stream_get_wrappers(), true)
+    ) {
 
+        throw new RuntimeException(
+            'PHP OpenSSL extension / ssl:// wrapper is not available on this server.'
+        );
+    }
+
+
+    /*
+     * ------------------------------------------------------------
+     * Try implicit SSL on 465 first, then STARTTLS on 587.
+     * ------------------------------------------------------------
+     */
+
+    $attempts = [
+        ['scheme' => 'ssl',  'port' => 465, 'starttls' => false],
+        ['scheme' => 'tls',  'port' => 587, 'starttls' => true],
+    ];
+
+    $lastException = null;
+
+    foreach ($attempts as $attempt) {
+
+        try {
+
+            return blooms_smtp_send_via(
+                $to,
+                $subject,
+                $htmlBody,
+                $replyTo,
+                $attempt['scheme'],
+                $attempt['port'],
+                $attempt['starttls']
+            );
+
+        } catch (Throwable $e) {
+
+            $lastException = $e;
+
+            if (BLOOMS_SMTP_DEBUG) {
+                error_log(
+                    'Blooms SMTP attempt failed on ' .
+                    $attempt['scheme'] . ':' . $attempt['port'] .
+                    ' — ' . $e->getMessage()
+                );
+            }
+
+            /* Try next attempt. */
+        }
+    }
+
+    /*
+     * All attempts failed.
+     */
+    if ($lastException) {
+        throw $lastException;
+    }
+
+    throw new RuntimeException(
+        'SMTP send failed for an unknown reason.'
+    );
+}
+
+
+/**
+ * Actually send the email over an open SMTP connection.
+ */
+function blooms_smtp_send_via(
+    string $to,
+    string $subject,
+    string $htmlBody,
+    ?string $replyTo,
+    string $scheme,
+    int $port,
+    bool $useStartTls
+): bool {
+
+    $socket = blooms_smtp_open_socket($scheme, $port);
 
     try {
 
-        /*
-         * ----------------------------------------------------
-         * 1. SMTP SERVER GREETING
-         * ----------------------------------------------------
-         */
-        blooms_smtp_expect(
-            $socket,
-            [220]
-        );
+        /* ----------------------------------------------------
+         * 1. GREETING
+         * ---------------------------------------------------- */
+        blooms_smtp_expect($socket, [220]);
 
 
-        /*
-         * ----------------------------------------------------
+        /* ----------------------------------------------------
          * 2. EHLO
-         * ----------------------------------------------------
-         */
+         * ---------------------------------------------------- */
         $hostname =
             $_SERVER['SERVER_NAME']
             ?? 'bloomsopenhandafh.com';
@@ -250,7 +368,6 @@ function blooms_smtp_mail(
             $hostname = 'bloomsopenhandafh.com';
         }
 
-
         blooms_smtp_command(
             $socket,
             'EHLO ' . $hostname,
@@ -258,49 +375,70 @@ function blooms_smtp_mail(
         );
 
 
-        /*
-         * ----------------------------------------------------
-         * 3. SMTP AUTH LOGIN
-         * ----------------------------------------------------
-         */
+        /* ----------------------------------------------------
+         * 3. STARTTLS (only on port 587)
+         * ---------------------------------------------------- */
+        if ($useStartTls) {
+
+            blooms_smtp_command(
+                $socket,
+                'STARTTLS',
+                [220]
+            );
+
+            $crypto = STREAM_CRYPTO_METHOD_TLS_CLIENT
+                | STREAM_CRYPTO_METHOD_TLSv1_2_CLIENT
+                | STREAM_CRYPTO_METHOD_TLSv1_3_CLIENT;
+
+            $ok = stream_socket_enable_crypto(
+                $socket,
+                true,
+                $crypto
+            );
+
+            if ($ok !== true) {
+
+                throw new RuntimeException(
+                    'Failed to enable TLS via STARTTLS.'
+                );
+            }
+
+            /*
+             * After STARTTLS we must EHLO again.
+             */
+            blooms_smtp_command(
+                $socket,
+                'EHLO ' . $hostname,
+                [250]
+            );
+        }
+
+
+        /* ----------------------------------------------------
+         * 4. AUTH LOGIN
+         * ---------------------------------------------------- */
         blooms_smtp_command(
             $socket,
             'AUTH LOGIN',
             [334]
         );
 
-
-        /*
-         * Username
-         */
         blooms_smtp_command(
             $socket,
-            base64_encode(
-                BLOOMS_SMTP_USERNAME
-            ),
+            base64_encode(BLOOMS_SMTP_USERNAME),
             [334]
         );
 
-
-        /*
-         * Password
-         */
         blooms_smtp_command(
             $socket,
-            base64_encode(
-                BLOOMS_SMTP_PASSWORD
-            ),
+            base64_encode(BLOOMS_SMTP_PASSWORD),
             [235]
         );
 
 
-        /*
-         * ----------------------------------------------------
-         * 4. CLEAN SUBJECT / FROM NAME
-         * ----------------------------------------------------
-         *
-         * Prevent CRLF header injection.
-         */
+        /* ----------------------------------------------------
+         * 5. CLEAN SUBJECT / FROM NAME
+         * ---------------------------------------------------- */
         $subject = str_replace(
             ["\r", "\n"],
             '',
@@ -314,11 +452,9 @@ function blooms_smtp_mail(
         );
 
 
-        /*
-         * ----------------------------------------------------
-         * 5. EMAIL HEADERS
-         * ----------------------------------------------------
-         */
+        /* ----------------------------------------------------
+         * 6. HEADERS
+         * ---------------------------------------------------- */
         $headers = [
 
             'Date: ' . date('r'),
@@ -340,51 +476,36 @@ function blooms_smtp_mail(
             'Content-Transfer-Encoding: 8bit',
         ];
 
-
-        /*
-         * Add Reply-To when supplied.
-         */
         if ($replyTo) {
 
             $headers[] =
-                'Reply-To: ' .
-                $replyTo;
+                'Reply-To: ' . $replyTo;
         }
 
 
-        /*
-         * ----------------------------------------------------
-         * 6. MAIL FROM
-         * ----------------------------------------------------
-         */
+        /* ----------------------------------------------------
+         * 7. MAIL FROM
+         * ---------------------------------------------------- */
         blooms_smtp_command(
             $socket,
-            'MAIL FROM:<' .
-            BLOOMS_SMTP_USERNAME .
-            '>',
+            'MAIL FROM:<' . BLOOMS_SMTP_USERNAME . '>',
             [250]
         );
 
 
-        /*
-         * ----------------------------------------------------
-         * 7. RECIPIENT
-         * ----------------------------------------------------
-         */
+        /* ----------------------------------------------------
+         * 8. RCPT TO
+         * ---------------------------------------------------- */
         blooms_smtp_command(
             $socket,
-            'RCPT TO:<' .
-            $to .
-            '>',
+            'RCPT TO:<' . $to . '>',
             [250, 251]
         );
 
 
-        /*
-         * ----------------------------------------------------
-         * 8. DATA
-         * ----------------------------------------------------
-         */
+        /* ----------------------------------------------------
+         * 9. DATA
+         * ---------------------------------------------------- */
         blooms_smtp_command(
             $socket,
             'DATA',
@@ -392,11 +513,9 @@ function blooms_smtp_mail(
         );
 
 
-        /*
-         * ----------------------------------------------------
-         * 9. NORMALIZE BODY LINE ENDINGS
-         * ----------------------------------------------------
-         */
+        /* ----------------------------------------------------
+         * 10. NORMALIZE BODY LINE ENDINGS
+         * ---------------------------------------------------- */
         $body = str_replace(
             ["\r\n", "\r"],
             "\n",
@@ -410,26 +529,14 @@ function blooms_smtp_mail(
         );
 
 
-        /*
-         * ----------------------------------------------------
-         * 10. SMTP DOT-STUFFING
-         * ----------------------------------------------------
-         *
-         * Correct pattern:
-         *
-         * /^./m
-         *
-         * Every body line beginning with "." becomes "..".
-         *
-         * This fixes the invalid regex that was in your
-         * original smtp_mail.php.
-         */
+        /* ----------------------------------------------------
+         * 11. SMTP DOT-STUFFING
+         * ---------------------------------------------------- */
         $body = preg_replace(
             '/^\./m',
             '..',
             $body
         );
-
 
         if ($body === null) {
 
@@ -439,31 +546,20 @@ function blooms_smtp_mail(
         }
 
 
-        /*
-         * ----------------------------------------------------
-         * 11. BUILD COMPLETE EMAIL
-         * ----------------------------------------------------
-         */
+        /* ----------------------------------------------------
+         * 12. BUILD MESSAGE
+         * ---------------------------------------------------- */
         $message =
-            implode(
-                "\r\n",
-                $headers
-            ) .
+            implode("\r\n", $headers) .
             "\r\n\r\n" .
             $body .
             "\r\n.\r\n";
 
 
-        /*
-         * ----------------------------------------------------
-         * 12. SEND EMAIL
-         * ----------------------------------------------------
-         */
-        $written = fwrite(
-            $socket,
-            $message
-        );
-
+        /* ----------------------------------------------------
+         * 13. SEND
+         * ---------------------------------------------------- */
+        $written = fwrite($socket, $message);
 
         if ($written === false) {
 
@@ -473,34 +569,27 @@ function blooms_smtp_mail(
         }
 
 
-        /*
-         * ----------------------------------------------------
-         * 13. CHECK SMTP ACCEPTED MESSAGE
-         * ----------------------------------------------------
-         */
-        blooms_smtp_expect(
-            $socket,
-            [250]
-        );
+        /* ----------------------------------------------------
+         * 14. CONFIRM ACCEPTED
+         * ---------------------------------------------------- */
+        blooms_smtp_expect($socket, [250]);
 
 
-        /*
-         * ----------------------------------------------------
-         * 14. CLOSE SMTP SESSION
-         * ----------------------------------------------------
-         */
+        /* ----------------------------------------------------
+         * 15. QUIT
+         * ---------------------------------------------------- */
         blooms_smtp_command(
             $socket,
             'QUIT',
             [221, 250]
         );
 
-
         return true;
-
 
     } finally {
 
-        fclose($socket);
+        if (is_resource($socket)) {
+            fclose($socket);
+        }
     }
 }
