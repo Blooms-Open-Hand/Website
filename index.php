@@ -1,3157 +1,462 @@
-<?php
+<?php require_once __DIR__ . "/site.php"; ?>
+<!DOCTYPE html>
+<html lang="en">
 
-$pageTitle = 'Compassionate Home Care & Personalized Support';
+<!-- Mirrored from https://annahomecareeverett.com/ by HTTrack Website Copier/3.x [XR&CO], Wed, 16 Sep 2026 20:49:49 GMT -->
+<!-- Added by HTTrack --><meta http-equiv="content-type" content="text/html;charset=utf-8" /><!-- /Added by HTTrack -->
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title><?=front_h($organization)?> | Adult Family Home Marysville, WA | Senior Care</title>
+  <meta name="description" content="<?=front_h($organization)?> LLC provides compassionate, round-the-clock assisted living in <?=front_h($address ?: "Marysville, WA")?>. Personalized senior care, memory support, and daily living assistance in a warm, family-centered home. Medicaid & private pay accepted." />
+  <meta name="keywords" content="Adult Family Home Marysville WA, Senior Care Marysville Washington, 24/7 Assisted Living, Alzheimer Care Marysville, Elderly Care Washington, <?=front_h($organization)?>" />
+  <meta name="robots" content="index, follow" />
+  <meta property="og:title" content="<?=front_h($organization)?> | Adult Family Home Marysville, WA" />
+  <meta property="og:description" content="Compassionate, family-centered senior care in <?=front_h($address ?: "Marysville, WA")?>. 24/7 staffing, personalized care plans, Medicaid accepted." />
+  <meta property="og:type" content="website" />
+  <meta property="og:url" content="https://www.Bloomsopenhandafh.com/" />
+  <link rel="canonical" href="https://www.Bloomsopenhandafh.com/" />
+  <link rel="stylesheet" href="styles.css" />
+  <link rel="preconnect" href="https://fonts.googleapis.com/" />
+  <link rel="preconnect" href="https://fonts.gstatic.com/" crossorigin />
+</head>
+<body>
 
-$pageDescription ='Compassionate home care and personalized support focused on dignity, safety, independence, and meaningful community living.';
+  <!-- ANNOUNCEMENT BANNER -->
+  <div class="announce-bar" id="announceBar" role="alert">
+    <div class="announce-inner">
+      <span class="announce-dot" aria-hidden="true"></span>
+      <strong>Rooms Available Now</strong>
+      <span class="announce-divider">·</span>
+      <span>We currently have rooms open — tours can be scheduled 7 days a week, with no appointment required</span>
+      <a href="tel:<?=front_phone_href($phone)?>" class="announce-cta">Call <?=front_h($phone)?> →</a>
+    </div>
+    <button class="announce-close" id="announceClose" aria-label="Close">✕</button>
+  </div>
 
-$pageKeywords = ['home care','home care services','adult family home','personalized care','personal care assistance','memory care','medication management','companionship','family support','community care'];
+  <!-- IDENTITY BAR -->
+  <div class="identity-bar">
+    <div class="container">
+      <div class="identity-bar-inner">
+        <span class="identity-name"><?=front_h($organization)?></span>
+        <span class="identity-divider" aria-hidden="true">·</span>
+        <span class="identity-sub">Licensed Adult Family Home</span>
+        <span class="identity-divider" aria-hidden="true">·</span>
+        <span class="identity-loc">📍 <?=front_h($address ?: "Marysville, WA")?></span>
+        <span class="identity-divider identity-divider-hide" aria-hidden="true">·</span>
+        <a href="tel:<?=front_phone_href($phone)?>" class="identity-phone">📞 <?=front_h($phone)?></a>
+      </div>
+    </div>
+  </div>
 
+  <!-- ===== NAVIGATION ===== -->
+  <nav class="navbar" id="navbar" role="navigation" aria-label="Main navigation">
+    <div class="navbar-inner">
+      <a href="index.php" class="navbar-logo" aria-label="<?=front_h($organization)?> Home"><img src="Logo.png" alt="<?=front_h($organization)?>" style="height:70px;width:auto;display:block;" /></a>
 
-$canonicalUrl ='https://' .($_SERVER['HTTP_HOST'] ?? 'example.com') .'/';
+      <ul class="navbar-links" role="list">
+        <li><a href="index.php" class="active">Home</a></li>
+        <li><a href="about.php">About Us</a></li>
+        <li><a href="services.php">Services</a></li>
+        <li><a href="gallery.php">Gallery</a></li>
+        <li><a href="blog.php">Blog</a></li>
+        <li><a href="contact.php">Contact</a></li>
+      </ul>
 
-$seoImage ='https://' .($_SERVER['HTTP_HOST'] ?? 'example.com') .'/assets/images/og-home.jpg';
+      <div class="navbar-cta">
+        <a href="tel:<?=front_phone_href($phone)?>" class="navbar-phone" aria-label="Call us at +1-206-657-3021">
+          <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M6.6 10.8c1.4 2.8 3.8 5.1 6.6 6.6l2.2-2.2c.3-.3.7-.4 1-.2 1.1.4 2.3.6 3.6.6.6 0 1 .4 1 1V20c0 .6-.4 1-1 1-9.4 0-17-7.6-17-17 0-.6.4-1 1-1h3.5c.6 0 1 .4 1 1 0 1.3.2 2.5.6 3.6.1.3 0 .7-.2 1L6.6 10.8z"/></svg>
+          <?=front_h($phone)?>
+        </a>
+        <a href="schedule.php" class="btn btn-primary">Schedule a Tour</a>
+      </div>
 
-$seoType = 'website';
+      <button class="hamburger" id="hamburger" aria-label="Toggle navigation menu" aria-expanded="false" aria-controls="mobileMenu">
+        <span></span><span></span><span></span>
+      </button>
+    </div>
+  </nav>
 
-require_once __DIR__ . '/header.php';
+  <!-- Mobile Menu -->
+  <div class="mobile-menu" id="mobileMenu" role="menu" aria-label="Mobile navigation">
+    <a href="index.php" role="menuitem">Home</a>
+    <a href="about.php" role="menuitem">About Us</a>
+    <a href="services.php" role="menuitem">Services</a>
+    <a href="gallery.php" role="menuitem">Gallery</a>
+    <a href="blog.php" role="menuitem">Blog</a>
+    <a href="contact.php" role="menuitem">Contact</a>
+    <div class="mobile-menu-cta">
+      <a href="tel:<?=front_phone_href($phone)?>" class="btn btn-outline">📞 <?=front_h($phone)?></a>
+      <a href="contact.php" class="btn btn-primary">Schedule a Tour</a>
+    </div>
+  </div>
 
-$banners = $pdo->query("SELECT * FROM banners WHERE status = 'published' ORDER BY id DESC")->fetchAll();
+  <main>
 
-$gallery = $pdo->query("SELECT * FROM gallery WHERE status = 'published' ORDER BY id DESC LIMIT 6 ")->fetchAll();
-
-$blogs = $pdo->query("SELECT * FROM blogs WHERE status = 'published' ORDER BY COALESCE(published_at, created_at) DESC LIMIT 6 ")->fetchAll();
-
-$tours = $pdo->query(" SELECT * FROM tours WHERE status = 'upcoming' AND tour_date >= CURDATE() ORDER BY tour_date ASC, tour_time ASC LIMIT 3 ")->fetchAll();
-
-if (!$banners) {
-
-    $banners = [
-
-        [
-            'title' =>
-                'Compassionate Care. Stronger Communities.',
-
-            'description' =>
-                'A welcoming place where people feel supported, respected and connected.',
-
-            'image_url' =>
-                'https://images.unsplash.com/photo-1576091160399-112ba8d25d1d?auto=format&fit=crop&w=2000&q=90',
-
-            'button_text' =>
-                'Learn About Us',
-
-            'button_link' =>
-                'about.php'
-        ]
-
-    ];
-
-}
-
+    <!-- ===== HERO ===== -->
+    <?php
+$hero = $publishedBanners[0] ?? null;
+$heroTitle = $hero['title'] ?? "Your Parent Deserves More Than a Facility. They Deserve a Real Home.";
+$heroDescription = $hero['description'] ?? "If you are looking for a place where your parent will be genuinely known — not simply looked after — you have found it. Blooms Open Hand is a licensed Adult Family Home with only a small number of residents, round-the-clock awake staff, and caregivers who take the time to learn your parent's stories, preferences, and personality from the very first day. This is what real peace of mind feels like.";
+$heroImage = front_image($hero['image_url'] ?? '', 'frontyard_updated.jpg');
+$heroButtonText = $hero['button_text'] ?? 'See the Home — Free Tour';
+$heroButtonLink = $hero['button_link'] ?? 'contact.php';
 ?>
-
-<!-- =========================================================
-     PAGE STYLES
-========================================================= -->
-
-<style>
-
-.hero-section {
-    position: relative;
-    background:#071611;
-    overflow: hidden;
-}
-
-
-.hero-slide {
-    position: absolute;
-    inset: 0;
-    opacity: 0;
-    visibility: hidden;
-    transition: opacity 1.1s ease, visibility 1.1s ease;
-}
-
-
-.hero-slide.active {
-    position: relative;
-    opacity: 1;
-    visibility: visible;
-}
-
-
-.hero-image {
-    transform: scale(1.08);
-    transition:transform 8s cubic-bezier(.2,.7,.2,1);
-}
-
-
-.hero-slide.active .hero-image {
-    transform: scale(1);
-}
-
-
-.hero-overlay {
-    background: linear-gradient(
-            90deg,
-            rgba(2, 12, 9, .94) 0%,
-            rgba(2, 12, 9, .78) 38%,
-            rgba(2, 12, 9, .40) 68%,
-            rgba(2, 12, 9, .08) 100%
-        );
-}
-
-
-.hero-content {
-    opacity: 0;
-    transform: translateY(35px);
-}
-
-
-.hero-slide.active .hero-content {
-    animation:
-        heroContentIn
-        1s
-        cubic-bezier(.22,1,.36,1)
-        .2s
-        forwards;
-}
-
-
-@keyframes heroContentIn {
-
-    from {
-        opacity: 0;
-        transform: translateY(35px);
-    }
-    to {
-        opacity: 1;
-        transform: translateY(0);
-    }
-
-}
-
-
-/* Hero badge */
-
-.hero-badge {
-
-    backdrop-filter:
-        blur(14px);
-
-    -webkit-backdrop-filter:
-        blur(14px);
-
-}
-
-
-/* Hero floating card */
-
-.hero-floating-card {
-
-    animation:
-        heroFloat
-        6s
-        ease-in-out
-        infinite;
-
-}
-
-
-@keyframes heroFloat {
-
-    0%,
-    100% {
-
-        transform:
-            translateY(0);
-
-    }
-
-    50% {
-
-        transform:
-            translateY(-8px);
-
-    }
-
-}
-
-
-/* Hero progress */
-
-.hero-progress {
-
-    position: absolute;
-
-    bottom: 0;
-
-    left: 0;
-
-    height: 3px;
-
-    width: 0;
-
-    background:
-        rgba(255,255,255,.9);
-
-}
-
-
-.hero-slide.active .hero-progress {
-
-    animation:
-        heroProgress
-        6s
-        linear
-        forwards;
-
-}
-
-
-@keyframes heroProgress {
-
-    from {
-
-        width: 0;
-
-    }
-
-    to {
-
-        width: 100%;
-
-    }
-
-}
-
-
-/* =========================================================
-   SCROLL REVEAL
-========================================================= */
-
-.reveal {
-
-    opacity: 0;
-
-    transform:
-        translateY(35px);
-
-    transition:
-        opacity .8s ease,
-        transform .8s cubic-bezier(.22,1,.36,1);
-
-}
-
-
-.reveal.is-visible {
-
-    opacity: 1;
-
-    transform:
-        translateY(0);
-
-}
-
-
-.reveal-delay-1 {
-
-    transition-delay:
-        .12s;
-
-}
-
-
-.reveal-delay-2 {
-
-    transition-delay:
-        .22s;
-
-}
-
-
-.reveal-delay-3 {
-
-    transition-delay:
-        .32s;
-
-}
-
-
-/* =========================================================
-   FLOATING ELEMENTS
-========================================================= */
-
-.floating-decoration {
-
-    animation:
-        elegantFloat
-        7s
-        ease-in-out
-        infinite;
-
-}
-
-
-.floating-decoration-slow {
-
-    animation:
-        elegantFloat
-        10s
-        ease-in-out
-        infinite;
-
-}
-
-
-@keyframes elegantFloat {
-
-    0%,
-    100% {
-
-        transform:
-            translate3d(0,0,0);
-
-    }
-
-    50% {
-
-        transform:
-            translate3d(0,-15px,0);
-
-    }
-
-}
-
-
-/* =========================================================
-   CARDS
-========================================================= */
-
-.service-card,
-.blog-card,
-.gallery-card {
-
-    will-change:
-        transform;
-
-}
-
-
-/* =========================================================
-   SERVICE CARD
-========================================================= */
-
-.service-card {
-
-    position: relative;
-
-    overflow: hidden;
-
-}
-
-
-.service-card::before {
-
-    content: '';
-
-    position: absolute;
-
-    top: 0;
-
-    left: 0;
-
-    width: 0;
-
-    height: 3px;
-
-    background:
-        #059669;
-
-    transition:
-        width .5s ease;
-
-}
-
-
-.service-card:hover::before {
-
-    width: 100%;
-
-}
-
-
-/* =========================================================
-   CAROUSEL
-========================================================= */
-
-.carousel-viewport {
-
-    overflow: hidden;
-
-    touch-action:
-        pan-y;
-
-}
-
-
-.carousel-track {
-
-    display: flex;
-
-    gap: 20px;
-
-    transition:
-        transform .7s cubic-bezier(.22,1,.36,1);
-
-}
-
-
-/* =========================================================
-   DOTS
-========================================================= */
-
-.carousel-dot {
-
-    width: 8px;
-
-    height: 6px;
-
-    border-radius: 999px;
-
-    background:
-        #cbd5e1;
-
-    transition:
-        width .35s ease,
-        background .35s ease;
-
-}
-
-
-.carousel-dot.active {
-
-    width: 30px;
-
-    background:
-        #059669;
-
-}
-
-
-/* Dark dots */
-
-.dark-dots .carousel-dot {
-
-    background:
-        rgba(255,255,255,.25);
-
-}
-
-
-.dark-dots .carousel-dot.active {
-
-    background:
-        #6ee7b7;
-
-}
-
-
-/* =========================================================
-   GALLERY
-========================================================= */
-
-.gallery-card {
-
-    position: relative;
-
-}
-
-
-.gallery-card img {
-
-    transition:
-        transform 1s cubic-bezier(.22,1,.36,1);
-
-}
-
-
-.gallery-card:hover img {
-
-    transform:
-        scale(1.08);
-
-}
-
-
-/* =========================================================
-   BLOG
-========================================================= */
-
-.blog-image {
-
-    transition:
-        transform .8s cubic-bezier(.22,1,.36,1);
-
-}
-
-
-.blog-card:hover .blog-image {
-
-    transform:
-        scale(1.05);
-
-}
-
-
-/* =========================================================
-   BUTTON
-========================================================= */
-
-.premium-button {
-
-    transition:
-        transform .3s ease,
-        box-shadow .3s ease,
-        background .3s ease;
-
-}
-
-
-.premium-button:hover {
-
-    transform:
-        translateY(-2px);
-
-    box-shadow:
-        0 15px 30px rgba(0,0,0,.12);
-
-}
-
-
-/* =========================================================
-   REDUCED MOTION
-========================================================= */
-
-@media (prefers-reduced-motion: reduce) {
-
-    *,
-    *::before,
-    *::after {
-
-        animation-duration:
-            .01ms !important;
-
-        animation-iteration-count:
-            1 !important;
-
-        transition-duration:
-            .01ms !important;
-
-        scroll-behavior:
-            auto !important;
-
-    }
-
-    .reveal {
-
-        opacity: 1;
-
-        transform: none;
-
-    }
-
-}
-
-</style>
-
-
-<main>
-    <section class="hero-section" id="heroSection" aria-label="Home care services introduction">
-        <?php foreach ($banners as $i => $banner): ?>
-            <div class="hero-slide <?= $i === 0 ? 'active' : '' ?>" data-hero-slide="<?= $i ?>">
-                <div class="relative min-h-[680px] lg:min-h-[760px] flex items-center">
-                    <img src="<?= h('./admin/' . assetImage($banner['image_url'])) ?>" alt="<?= h($banner['title'] . ' - ' . $organization . ' home care services') ?>" class="hero-image absolute inset-0 w-full h-full object-cover" width="2000" height="1100" <?= $i === 0 ? 'fetchpriority="high" decoding="async"' : 'loading="lazy" decoding="async"' ?>>
-                    <div class="hero-overlay absolute inset-0" aria-hidden="true"></div>
-                    <div class="absolute inset-x-0 bottom-0 h-48 bg-gradient-to-t from-slate-950/60 to-transparent" aria-hidden="true"></div>
-                    <div class="floating-decoration pointer-events-none absolute top-28 right-[8%] hidden lg:block" aria-hidden="true">
-                        <div class="w-28 h-28 rounded-full border border-white/10"></div>
-                    </div>
-                    <div class="floating-decoration-slow pointer-events-none absolute bottom-32 right-[15%] hidden lg:block" aria-hidden="true">
-                        <div class="w-16 h-16 rounded-full bg-emerald-400/10 blur-sm"></div>
-                    </div>
-                    <div class="relative z-10 w-full max-w-7xl mx-auto px-5 py-28 lg:py-36">
-                        <div class="hero-content max-w-4xl">
-                            <div class="hero-badge inline-flex items-center gap-3 border border-[#059669]/25 bg-[#059669]/10 px-4 py-2 rounded-full text-sm text-[#059669] font-bold shadow-lg">
-                                <span>Open Hands. Open Hearts. A True Home for Your Loved One</span>
-                            </div>
-                            <h1 class="mt-2 text-5xl w-[650px] md:text-6xl lg:text-[76px] font-black tracking-[-0.045em] leading-[.98] text-white max-w-4xl">
-                                <?= h($banner['title']) ?>
-                            </h1>
-                            <p class="mt-7 max-w-2xl text-sm md:text-sm leading-8 text-white/30">
-                                <?= h($banner['description']) ?>
-                            </p>
-                            <div class="mt-9 flex flex-wrap items-center gap-4">
-                                <?php if (!empty($banner['button_text'])): ?>
-                                    <a href="<?= h($banner['button_link'] ?: '#') ?>" class="premium-button inline-flex items-center gap-3 rounded-full bg-[#059669] px-7 py-2 text-sm font-bold text-white" aria-label="<?= h($banner['button_text']) ?>">
-                                        <?= h($banner['button_text']) ?>
-                                        <span class="text-lg" aria-hidden="true">→</span>
-                                    </a>
-                                <?php endif; ?>
-                                <a href="schedule.php" class="premium-button inline-flex items-center gap-3 rounded-full border border-white/25 bg-white/5 px-12 py-3 text-sm font-bold text-white backdrop-blur hover:bg-white/10" aria-label="Contact <?= h($organization) ?>">
-                                    Schedule a Tour
-                                </a>
-                            </div>
-                            <div class="mt-12 flex flex-wrap items-center gap-x-8 gap-y-4 text-sm text-white/70">
-                                <div class="flex items-center gap-2">
-                                    <span class="text-emerald-300" aria-hidden="true">✓</span>
-                                    Person-centered care
-                                </div>
-                                <div class="flex items-center gap-2">
-                                    <span class="text-emerald-300" aria-hidden="true">✓</span>
-                                    Trusted support
-                                </div>
-                                <div class="flex items-center gap-2">
-                                    <span class="text-emerald-300" aria-hidden="true">✓</span>
-                                    Community focused
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-
-                    <aside class="hero-floating-card absolute bottom-20 right-[5%] hidden xl:block" aria-label="Our care philosophy">
-                        <div class="w-72 rounded-3xl border border-white/10 bg-white/10 backdrop-blur-xl p-6 text-white shadow-2xl">
-                            <div class="text-xs font-bold uppercase tracking-[.18em] text-emerald-300">
-                                Our philosophy
-                            </div>
-                            <div class="mt-3 text-xl font-bold leading-7">
-                                Open Hands. Open Hearts.
-                            </div>
-                            <div class="mt-2 text-sm leading-6 text-white/65">
-                                A true home for the people we have the privilege to care for.
-                            </div>
-                        </div>
-                    </aside>
-                    <div class="hero-progress" aria-hidden="true"></div>
+<section class="hero" aria-label="Welcome to <?=front_h($organization)?>">
+      <div class="hero-bg-pattern" aria-hidden="true"></div>
+      <div class="hero-bg-shapes" aria-hidden="true">
+        <div class="hero-shape hero-shape-1"></div>
+        <div class="hero-shape hero-shape-2"></div>
+        <div class="hero-shape hero-shape-3"></div>
+      </div>
+
+      <div class="hero-inner container">
+        <div class="hero-content">
+          <div class="hero-badge">
+            <span class="hero-badge-dot">★</span>
+            6 Licensed Beds · <?=front_h($address ?: "Marysville, WA")?> · Medicaid Accepted
+          </div>
+
+          <h1><?=nl2br(front_h($heroTitle))?></h1>
+          <p style="color:rgba(255,255,255,0.55);font-size:0.85rem;font-weight:600;letter-spacing:0.09em;text-transform:uppercase;margin-bottom:1rem;">
+            📍 Adult Family Home · <?=front_h($address ?: "Marysville, WA")?>
+          </p>
+
+          <p class="hero-desc"><?=nl2br(front_h($heroDescription))?></p>
+
+          <div class="hero-actions">
+            <a href="<?=front_h($heroButtonLink ?: "contact.php")?>" class="btn btn-accent"><?=front_h($heroButtonText ?: "See the Home — Free Tour")?></a>
+            <a href="tel:<?=front_phone_href($phone)?>" class="btn btn-outline-white">📞 Talk to Us Now</a>
+          </div>
+
+          <div class="hero-stats" role="list" aria-label="Key statistics">
+            <div role="listitem">
+              <span class="hero-stat-num">6</span>
+              <span class="hero-stat-label">Licensed Beds — Never Crowded</span>
+            </div>
+            <div role="listitem">
+              <span class="hero-stat-num">24/7</span>
+              <span class="hero-stat-label">Awake Staff — Always Present</span>
+            </div>
+            <div role="listitem">
+              <span class="hero-stat-num">$0</span>
+              <span class="hero-stat-label">Cost to Tour — No Obligation</span>
+            </div>
+          </div>
+        </div>
+
+        <div class="hero-visual" aria-hidden="true">
+          <div class="hero-image-frame">
+            <img src="<?=front_h($heroImage)?>" alt="<?=front_h($heroTitle)?>" class="hero-image-main"
+              width="420" height="500"
+            />
+            <div class="hero-image-card">
+              <div class="hero-image-card-icon">
+                <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M12 21.35l-1.45-1.32C5.4 15.36 2 12.28 2 8.5 2 5.42 4.42 3 7.5 3c1.74 0 3.41.81 4.5 2.09C13.09 3.81 14.76 3 16.5 3 19.58 3 22 5.42 22 8.5c0 3.78-3.4 6.86-8.55 11.54L12 21.35z"/></svg>
+              </div>
+              <div class="hero-image-card-text">
+                <strong>Compassionate Care</strong>
+                <span>Nurturing Joy, One Story at a Time</span>
+              </div>
+            </div>
+            <div class="hero-image-dot">
+              <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M12 3L2 12h3v9h6v-5h2v5h6v-9h3L12 3z"/></svg>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- ===== TRUST BAR ===== -->
+    <div class="trust-bar" role="complementary" aria-label="Trust indicators">
+      <div class="trust-bar-inner container">
+        <div class="trust-item">
+          <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z"/></svg>
+          <span>State-Licensed by WA DSHS</span>
+        </div>
+        <div class="trust-item">
+          <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm-2 15l-5-5 1.41-1.41L10 14.17l7.59-7.59L19 8l-9 9z"/></svg>
+          <span>Medicaid Accepted — We Handle the Paperwork</span>
+        </div>
+        <div class="trust-item">
+          <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M12 1L3 5v6c0 5.55 3.84 10.74 9 12 5.16-1.26 9-6.45 9-12V5l-9-4zm-2 16l-4-4 1.41-1.41L10 14.17l6.59-6.59L18 9l-8 8z"/></svg>
+          <span>Staff Awake 24/7 — Not On-Call, Actually There</span>
+        </div>
+        <div class="trust-item">
+          <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M16 11c1.66 0 2.99-1.34 2.99-3S17.66 5 16 5c-1.66 0-3 1.34-3 3s1.34 3 3 3zm-8 0c1.66 0 2.99-1.34 2.99-3S9.66 5 8 5C6.34 5 5 6.34 5 8s1.34 3 3 3zm0 2c-2.33 0-7 1.17-7 3.5V19h14v-2.5c0-2.33-4.67-3.5-7-3.5zm8 0c-.29 0-.62.02-.97.05 1.16.84 1.97 1.97 1.97 3.45V19h6v-2.5c0-2.33-4.67-3.5-7-3.5z"/></svg>
+          <span>Small Resident Count — Your Parent Is Never a Number</span>
+        </div>
+        <div class="trust-item">
+          <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M12 2l3.09 6.26L22 9.27l-5 4.87 1.18 6.88L12 17.77l-6.18 3.25L7 14.14 2 9.27l6.91-1.01L12 2z"/></svg>
+          <span>Alzheimer's, Dementia &amp; Parkinson's Care</span>
+        </div>
+      </div>
+    </div>
+
+    <!-- ===== ABOUT PREVIEW ===== -->
+    <section class="section about-preview" id="about" aria-labelledby="about-heading">
+      <div class="container">
+        <div class="about-preview-grid">
+          <div class="about-image-mosaic fade-in" aria-hidden="true">
+            <img
+              src="Updated_livingroom.jpg"
+              alt="Warm, welcoming living room at <?=front_h($organization)?>"
+              class="mosaic-img mosaic-img-1"
+              width="420" height="300"
+            />
+            <img
+              src="bedroom1_updated.jpg"
+              alt="Comfortable private bedroom at <?=front_h($organization)?>"
+              class="mosaic-img mosaic-img-2"
+              width="300" height="250"
+            />
+            <img
+              src="updated_backyard.jpg"
+              alt="Beautiful backyard deck at <?=front_h($organization)?>"
+              class="mosaic-img mosaic-img-3"
+              width="260" height="180"
+            />
+            <div class="mosaic-badge">
+              <span class="mosaic-badge-num">★</span>
+              <span class="mosaic-badge-text">Top-Rated Care</span>
+            </div>
+          </div>
+
+          <div class="about-content fade-in fade-in-delay-1">
+            <span class="section-label">Why Families Choose Us</span>
+            <h2 id="about-heading" class="section-title">We Know Your Parent by Name — And by Their Story.</h2>
+
+            <p>Many families say the same thing after their first visit: "This feels different." And it truly is. Because we care for only a small number of residents, our caregivers do more than manage daily needs — they form real, lasting relationships. They come to understand who your parent is beyond any diagnosis.</p>
+
+            <p>We are located in Marysville, Washington, in a genuine residential home — not a wing of a facility, not a unit in a complex. A home with a living room, a fireplace, a backyard deck, and people who will remember your parent's favorite music and ask how their day went.</p>
+
+            <div class="motto-box">
+              "Open Hands. Open Hearts. A True Home for Your Loved One." — we mean this. Every meal, every activity, every moment of care is built around the person, never around the paperwork.
+            </div>
+
+            <div class="value-chips" role="list" aria-label="Our core values">
+              <span class="chip" role="listitem">Family-Centered</span>
+              <span class="chip" role="listitem">Person-First Care</span>
+              <span class="chip" role="listitem">Daily Purpose</span>
+              <span class="chip" role="listitem">Community Connection</span>
+              <span class="chip" role="listitem">Dignity &amp; Respect</span>
+            </div>
+
+            <a href="schedule.php" class="btn btn-primary">Come See It for Yourself →</a>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- ===== SERVICES PREVIEW ===== -->
+    <section class="section services-preview" id="services" aria-labelledby="services-heading">
+      <div class="container">
+        <div class="text-center fade-in">
+          <span class="section-label">What We Provide</span>
+          <h2 id="services-heading" class="section-title">Everything Your Parent Needs. All in One Home.</h2>
+          <p class="section-subtitle">From medication management to memory care, daily meals to meaningful activities — we take care of it all, so you can go back to being a son or daughter, not a caregiver.</p>
+        </div>
+
+        <div class="services-grid">
+          <article class="service-card fade-in fade-in-delay-1">
+            <div class="service-icon" aria-hidden="true">
+              <svg viewBox="0 0 24 24"><path d="M19 3H5c-1.1 0-2 .9-2 2v14c0 1.1.9 2 2 2h14c1.1 0 2-.9 2-2V5c0-1.1-.9-2-2-2zm-7 3c1.93 0 3.5 1.57 3.5 3.5S13.93 13 12 13s-3.5-1.57-3.5-3.5S10.07 6 12 6zm7 13H5v-.23c0-.62.28-1.2.76-1.58C7.47 15.82 9.64 15 12 15s4.53.82 6.24 2.19c.48.38.76.97.76 1.58V19z"/></svg>
+            </div>
+            <h3>Personalized Daily Care</h3>
+            <p>Bathing, dressing, grooming, and incontinence support — all delivered with warmth, respect, and genuine dignity by our trained caregivers.</p>
+          </article>
+
+          <article class="service-card fade-in fade-in-delay-2">
+            <div class="service-icon" aria-hidden="true">
+              <svg viewBox="0 0 24 24"><path d="M19 3H5c-1.1 0-1.99.9-1.99 2L3 19c0 1.1.89 2 1.99 2H19c1.1 0 2-.9 2-2V5c0-1.1-.9-2-2-2zm-1 11h-4v4h-4v-4H6v-4h4V6h4v4h4v4z"/></svg>
+            </div>
+            <h3>Medical &amp; Health Management</h3>
+            <p>Medication management, vital signs monitoring, wound care, and coordination with visiting physicians to help keep health on track.</p>
+          </article>
+
+          <article class="service-card fade-in fade-in-delay-3">
+            <div class="service-icon" aria-hidden="true">
+              <svg viewBox="0 0 24 24"><path d="M17 12h-5v5h5v-5zM16 1v2H8V1H6v2H5c-1.11 0-1.99.9-1.99 2L3 19c0 1.1.89 2 1.99 2h14.02C20.1 21 21 20.1 21 19V5c0-1.1-.9-2-2-2h-1V1h-2zm3 18H5V8h14v11z"/></svg>
+            </div>
+            <h3>Enriching Activity Programs</h3>
+            <p>Caregiver-assisted exercise, music therapy, gardening, crafts, social games, and themed celebrations to nourish the spirit every day.</p>
+          </article>
+
+          <article class="service-card fade-in">
+            <div class="service-icon" aria-hidden="true">
+              <svg viewBox="0 0 24 24"><path d="M12 3C6.48 3 2 7.48 2 13c0 4.42 2.87 8.17 6.84 9.49.5.09.68-.22.68-.48v-1.69c-2.78.6-3.37-1.34-3.37-1.34-.46-1.16-1.11-1.47-1.11-1.47-.91-.62.07-.6.07-.6 1 .07 1.53 1.03 1.53 1.03.89 1.52 2.34 1.08 2.91.83.09-.65.35-1.09.63-1.34-2.22-.25-4.55-1.11-4.55-4.94 0-1.09.39-1.98 1.03-2.68-.1-.25-.45-1.27.1-2.64 0 0 .84-.27 2.75 1.02.8-.22 1.65-.33 2.5-.33s1.7.11 2.5.33c1.91-1.29 2.75-1.02 2.75-1.02.55 1.37.2 2.39.1 2.64.64.7 1.03 1.59 1.03 2.68 0 3.84-2.34 4.68-4.57 4.93.36.31.68.92.68 1.85v2.74c0 .27.18.58.69.48C19.13 21.16 22 17.42 22 13c0-5.52-4.48-10-10-10z"/></svg>
+            </div>
+            <h3>Alzheimer's &amp; Memory Care</h3>
+            <p>Specialized, gentle support for residents living with Alzheimer's, dementia, and Parkinson's — in a safe, structured, and compassionate setting.</p>
+          </article>
+
+          <article class="service-card fade-in fade-in-delay-1">
+            <div class="service-icon" aria-hidden="true">
+              <svg viewBox="0 0 24 24"><path d="M18.5 2h-13C4.67 2 4 2.67 4 3.5v17l8-3 8 3V3.5c0-.83-.67-1.5-1.5-1.5zm-1.5 14l-5-2.18L7 16V4h10v12z"/></svg>
+            </div>
+            <h3>Home-Cooked Meals Daily</h3>
+            <p>Nutritious, home-cooked meals prepared fresh every day — because good food is part of good care and brings everyone together.</p>
+          </article>
+
+          <article class="service-card fade-in fade-in-delay-2">
+            <div class="service-icon" aria-hidden="true">
+              <svg viewBox="0 0 24 24"><path d="M12 1L3 5v6c0 5.55 3.84 10.74 9 12 5.16-1.26 9-6.45 9-12V5l-9-4zm0 4.3c1.49 0 2.7 1.21 2.7 2.7 0 1.49-1.21 2.7-2.7 2.7-1.49 0-2.7-1.21-2.7-2.7 0-1.49 1.21-2.7 2.7-2.7zm0 13.4c-2.25 0-4.24-1.15-5.4-2.9.03-1.79 3.6-2.77 5.4-2.77 1.8 0 5.37.98 5.4 2.77-1.16 1.75-3.15 2.9-5.4 2.9z"/></svg>
+            </div>
+            <h3>Hospice &amp; End-of-Life Support</h3>
+            <p>Compassionate, dignified end-of-life care that brings comfort, peace, and support to residents and their families during life's most important moments.</p>
+          </article>
+        </div>
+
+        <div class="text-center">
+          <a href="services.php" class="btn btn-outline">View All Services →</a>
+        </div>
+      </div>
+    </section>
+
+    <!-- ===== WHY CHOOSE US ===== -->
+    <section class="section why-us" aria-labelledby="why-heading">
+      <div class="container">
+        <div class="why-grid">
+          <div class="why-content fade-in">
+            <span class="section-label">The Honest Difference</span>
+            <h2 id="why-heading" class="section-title">What You Will Never Have to Worry About Again After Visiting Us</h2>
+            <p class="section-subtitle">Families who tour <?=front_h($organization)?> tell us they finally feel like they can breathe. Here is why.</p>
+
+            <div class="why-features" role="list">
+              <div class="why-feature" role="listitem">
+                <div class="why-feature-num" aria-hidden="true">01</div>
+                <div class="why-feature-text">
+                  <h4>Your Parent Will Never Be a Stranger Here</h4>
+                  <p>Because we serve only a small number of residents, our caregivers know your parent by name, by story, and by preference. There are no shift handoffs where details get lost — the same familiar faces show up every day.</p>
                 </div>
-            </div>
-        <?php endforeach; ?>
-        <?php if (count($banners) > 1): ?>
-
-    <div class="absolute z-20 bottom-8 left-0 right-0">
-
-        <div
-            class="max-w-7xl mx-auto px-5 flex items-center justify-between"
-        >
-
-
-            <!-- SLIDE NUMBER -->
-
-            <div
-                class="hidden sm:flex items-center gap-4 text-white"
-                aria-hidden="true"
-            >
-
-                <span
-                    id="heroCurrent"
-                    class="text-sm font-bold"
-                >
-                    01
-                </span>
-
-                <span
-                    class="w-16 h-px bg-white/20"
-                ></span>
-
-                <span
-                    class="text-sm text-white/50"
-                >
-                    <?= str_pad(count($banners), 2, '0', STR_PAD_LEFT) ?>
-                </span>
-
-            </div>
-
-
-            <!-- DOTS -->
-
-            <div
-                id="heroDots"
-                class="flex items-center gap-2"
-                role="tablist"
-                aria-label="Homepage banner navigation"
-            >
-
-                <?php foreach ($banners as $i => $banner): ?>
-
-                    <button
-                        type="button"
-                        data-hero-dot="<?= $i ?>"
-                        class="hero-dot h-1.5 rounded-full transition-all duration-500 <?= $i === 0 ? 'w-10 bg-white' : 'w-2 bg-white/30' ?>"
-                        aria-label="View banner <?= $i + 1 ?>: <?= h($banner['title']) ?>"
-                        aria-selected="<?= $i === 0 ? 'true' : 'false' ?>"
-                        role="tab"
-                    ></button>
-
-                <?php endforeach; ?>
-
-            </div>
-
-
-            <!-- ARROWS -->
-
-            <div
-                class="hidden sm:flex items-center gap-2"
-            >
-
-                <button
-                    type="button"
-                    id="heroPrev"
-                    class="w-11 h-11 rounded-full border border-white/15 bg-white/5 text-white flex items-center justify-center hover:bg-white hover:text-slate-950 transition"
-                    aria-label="Previous homepage banner"
-                >
-                    ←
-                </button>
-
-
-                <button
-                    type="button"
-                    id="heroNext"
-                    class="w-11 h-11 rounded-full border border-white/15 bg-white/5 text-white flex items-center justify-center hover:bg-white hover:text-slate-950 transition"
-                    aria-label="Next homepage banner"
-                >
-                    →
-                </button>
-
-            </div>
-
-
-        </div>
-
-    </div>
-
-<?php endif; ?>
-
-
-</section>
-
-<!-- =========================================================
-     ABOUT / WHO WE ARE
-========================================================= -->
-
-<section
-    class="relative overflow-hidden bg-white py-24 lg:py-32"
-    aria-labelledby="about-heading"
->
-
-
-<!-- Floating background -->
-
-<div
-    class="floating-decoration pointer-events-none absolute -right-32 top-24 h-80 w-80 rounded-full bg-emerald-50 blur-3xl"
-    aria-hidden="true"
-></div>
-
-
-<div
-    class="relative max-w-7xl mx-auto px-5"
->
-
-    <div
-        class="grid lg:grid-cols-2 gap-16 lg:gap-24 items-center"
-    >
-
-
-        <!-- CONTENT -->
-
-        <div>
-
-            <div
-                class="reveal flex items-center gap-3 text-xs font-bold uppercase tracking-[.2em] text-emerald-700"
-            >
-
-                <span
-                    class="w-8 h-px bg-emerald-600"
-                    aria-hidden="true"
-                ></span>
-
-                Who we are
-
-            </div>
-
-
-            <h2
-                id="about-heading"
-                class="reveal reveal-delay-1 mt-5 text-4xl md:text-5xl lg:text-6xl font-black tracking-[-.045em] leading-[1.02] text-slate-950"
-            >
-
-                Care that sees the person, not just the need.
-
-            </h2>
-
-
-            <p
-                class="reveal reveal-delay-2 mt-7 text-lg text-slate-600 leading-8"
-            >
-
-                We believe quality care begins with listening. Our approach is centered on dignity, safety, connection and helping people live meaningful lives.
-
-            </p>
-
-
-            <!-- FEATURES -->
-
-            <div
-                class="reveal reveal-delay-3 mt-9 grid sm:grid-cols-2 gap-4"
-            >
-
-                <article
-                    class="rounded-2xl bg-emerald-50/80 p-6 border border-emerald-100"
-                >
-
-                    <div
-                        class="w-11 h-11 rounded-xl bg-white text-emerald-700 flex items-center justify-center text-xl shadow-sm"
-                        aria-hidden="true"
-                    >
-                        ♥
-                    </div>
-
-                    <h3
-                        class="mt-5 font-bold text-slate-950"
-                    >
-                        Person-centered
-                    </h3>
-
-                    <p
-                        class="mt-2 text-sm text-slate-600 leading-6"
-                    >
-                        Support shaped around individual needs and goals.
-                    </p>
-
-                </article>
-
-
-                <article
-                    class="rounded-2xl bg-slate-50 p-6 border border-slate-100"
-                >
-
-                    <div
-                        class="w-11 h-11 rounded-xl bg-white text-emerald-700 flex items-center justify-center text-xl shadow-sm"
-                        aria-hidden="true"
-                    >
-                        ✦
-                    </div>
-
-                    <h3
-                        class="mt-5 font-bold text-slate-950"
-                    >
-                        Trusted support
-                    </h3>
-
-                    <p
-                        class="mt-2 text-sm text-slate-600 leading-6"
-                    >
-                        Professional, respectful and dependable care.
-                    </p>
-
-                </article>
-
-            </div>
-
-
-            <a
-                href="about.php"
-                class="reveal reveal-delay-3 mt-9 inline-flex items-center gap-3 text-sm font-bold text-emerald-700 hover:gap-5 transition-all duration-300"
-                aria-label="Learn more about <?= h($organization) ?>"
-            >
-
-                Discover our story
-
-                <span aria-hidden="true">
-                    →
-                </span>
-
-            </a>
-
-        </div>
-
-
-        <!-- IMAGE -->
-
-        <div
-            class="reveal relative"
-        >
-
-            <div
-                class="relative overflow-hidden rounded-[2rem] shadow-2xl"
-            >
-
-                <img
-                    src="https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcQ9_wJEVUEuaPwF_Squ_23QUW9Vuu040k6r8uGKVu-pCQ&s=10"
-                    class="w-full h-[520px] object-cover hover:scale-105 transition duration-1000"
-                    alt="<?= h($organization) ?> providing compassionate, person-centered home care and community support"
-                    width="1200"
-                    height="800"
-                    loading="lazy"
-                    decoding="async"
-                >
-
-            </div>
-
-
-            <!-- FLOATING CARD -->
-
-            <aside
-                class="floating-decoration absolute -bottom-7 -left-4 md:-left-8 max-w-sm rounded-2xl bg-white p-6 shadow-2xl border border-slate-100"
-                aria-label="Our care promise"
-            >
-
-                <div
-                    class="text-xs font-bold uppercase tracking-[.18em] text-emerald-700"
-                >
-                    Our promise
+              </div>
+              <div class="why-feature" role="listitem">
+                <div class="why-feature-num" aria-hidden="true">02</div>
+                <div class="why-feature-text">
+                  <h4>Someone Is Always Awake. Always.</h4>
+                  <p>Our team is fully awake and present around the clock — not on-call from home, not resting in a break room. At 3am, someone is there. That is not standard practice everywhere. It is here.</p>
                 </div>
-
-                <div
-                    class="mt-2 text-xl font-black text-slate-950"
-                >
-                    Open Hands. Open Hearts.
+              </div>
+              <div class="why-feature" role="listitem">
+                <div class="why-feature-num" aria-hidden="true">03</div>
+                <div class="why-feature-text">
+                  <h4>Your Parent's Life Still Has Purpose Here</h4>
+                  <p>We help each resident share and preserve their personal history — creating real connection and reminding them that who they are matters far beyond what they can or cannot do anymore.</p>
                 </div>
-
-                <div
-                    class="mt-1 text-sm text-slate-500"
-                >
-                    A true home for your loved one.
+              </div>
+              <div class="why-feature" role="listitem">
+                <div class="why-feature-num" aria-hidden="true">04</div>
+                <div class="why-feature-text">
+                  <h4>You Can Drop By Anytime. We Mean It.</h4>
+                  <p>No visiting hours. No scheduled appointments. Come for lunch. Join an activity. Stop by on your way home from work. We want you here — and so does your parent.</p>
                 </div>
-
-            </aside>
-
-
-        </div>
-
-
-    </div>
-
-</div>
-
-
-</section>
-
-<!-- =========================================================
-     SERVICES
-========================================================= -->
-
-<section
-    class="relative overflow-hidden bg-slate-50 py-24 lg:py-32"
-    id="servicesSection"
-    aria-labelledby="services-heading"
->
-
-
-<div
-    class="pointer-events-none absolute -top-32 -right-32 h-96 w-96 rounded-full bg-emerald-100/50 blur-3xl"
-    aria-hidden="true"
-></div>
-
-
-<div
-    class="pointer-events-none absolute bottom-0 -left-32 h-80 w-80 rounded-full bg-emerald-100/30 blur-3xl"
-    aria-hidden="true"
-></div>
-
-
-<div
-    class="relative max-w-7xl mx-auto px-5"
->
-
-
-    <!-- HEADER -->
-
-    <div
-        class="flex flex-col md:flex-row md:items-end justify-between gap-7 mb-12"
-    >
-
-        <div class="max-w-2xl">
-
-            <div
-                class="reveal flex items-center gap-3 text-xs font-bold uppercase tracking-[.2em] text-emerald-700"
-            >
-
-                <span
-                    class="w-8 h-px bg-emerald-600"
-                    aria-hidden="true"
-                ></span>
-
-                What we offer
-
+              </div>
             </div>
-
-
-            <h2
-                id="services-heading"
-                class="reveal reveal-delay-1 mt-5 text-4xl md:text-5xl lg:text-6xl font-black tracking-[-.045em] leading-[1.02] text-slate-950"
-            >
-
-                Support designed around you.
-
-            </h2>
-
-
-            <p
-                class="reveal reveal-delay-2 mt-5 text-lg text-slate-600 leading-8 max-w-xl"
-            >
-
-                Thoughtful services delivered with dignity, professionalism and genuine care.
-
-            </p>
-
-        </div>
-
-
-        <!-- CONTROLS -->
-
-        <div
-            class="flex items-center gap-3"
-        >
-
-            <button
-                type="button"
-                id="servicePrev"
-                class="w-12 h-12 rounded-full border border-slate-300 bg-white text-slate-700 flex items-center justify-center hover:bg-emerald-600 hover:border-emerald-600 hover:text-white transition-all duration-300"
-                aria-label="Previous home care services"
-            >
-                ←
-            </button>
-
-
-            <button
-                type="button"
-                id="serviceNext"
-                class="w-12 h-12 rounded-full border border-slate-300 bg-white text-slate-700 flex items-center justify-center hover:bg-emerald-600 hover:border-emerald-600 hover:text-white transition-all duration-300"
-                aria-label="Next home care services"
-            >
-                →
-            </button>
-
-        </div>
-
-    </div>
-
-
-    <!-- SERVICE TRACK -->
-
-    <div
-        id="serviceViewport"
-        class="carousel-viewport"
-        aria-label="Home care services"
-    >
-
-        <div
-            id="serviceTrack"
-            class="carousel-track"
-        >
-
-
-            <?php
-
-            $services = [
-
-                [
-                    '01',
-                    'Personalized Daily Living Assistance',
-                    'Hands-on support with essential activities of daily living, delivered with patience, dignity and respect.',
-                    '♥'
-                ],
-
-                [
-                    '02',
-                    'Medication Management & Health Monitoring',
-                    'Reliable oversight of medications and health indicators, coordinated with physicians and family.',
-                    '⌖'
-                ],
-
-                [
-                    '03',
-                    'Memory Care Support',
-                    'A calm, secure and familiar environment designed around the needs of residents with memory-related conditions.',
-                    '✦'
-                ],
-
-                [
-                    '04',
-                    'Companionship & Social Support',
-                    'Meaningful companionship and activities that encourage connection, confidence and belonging.',
-                    '♡'
-                ],
-
-                [
-                    '05',
-                    'Personal Care',
-                    'Respectful assistance with personal routines while protecting independence, privacy and dignity.',
-                    '＋'
-                ],
-
-                [
-                    '06',
-                    'Family Support',
-                    'Clear communication and thoughtful support that helps families stay informed and connected.',
-                    '⌂'
-                ]
-
-            ];
-
-
-            foreach ($services as $s):
-
-            ?>
-
-
-                <article
-                    class="service-card group shrink-0 w-[86%] sm:w-[60%] md:w-[47%] lg:w-[32%] rounded-3xl bg-white border border-slate-200/80 p-8 md:p-9 hover:-translate-y-2 hover:shadow-2xl hover:shadow-slate-900/5 transition-all duration-500"
-                >
-
-
-                    <!-- NUMBER -->
-
-                    <div
-                        class="flex justify-between items-start"
-                    >
-
-                        <div
-                            class="w-14 h-14 rounded-2xl bg-emerald-50 text-emerald-700 flex items-center justify-center text-xl group-hover:bg-emerald-600 group-hover:text-white group-hover:rotate-3 transition-all duration-500"
-                            aria-hidden="true"
-                        >
-
-                            <?= h($s[3]) ?>
-
-                        </div>
-
-
-                        <span
-                            class="text-xs font-bold tracking-widest text-slate-300"
-                            aria-hidden="true"
-                        >
-                            <?= h($s[0]) ?>
-                        </span>
-
-                    </div>
-
-
-                    <h3
-                        class="mt-8 text-xl font-bold text-slate-950 leading-7"
-                    >
-
-                        <?= h($s[1]) ?>
-
-                    </h3>
-
-
-                    <p
-                        class="mt-4 text-sm text-slate-600 leading-7"
-                    >
-
-                        <?= h($s[2]) ?>
-
-                    </p>
-
-
-                    <a
-                        href="services.php"
-                        class="mt-8 inline-flex items-center gap-2 text-sm font-bold text-emerald-700 group-hover:gap-4 transition-all duration-300"
-                        aria-label="Learn more about <?= h($s[1]) ?>"
-                    >
-
-                        Learn more
-
-                        <span aria-hidden="true">
-                            →
-                        </span>
-
-                    </a>
-
-
-                </article>
-
-
-            <?php endforeach; ?>
-
-
-        </div>
-
-    </div>
-
-
-    <!-- FOOTER -->
-
-    <div
-        class="mt-9 flex items-center justify-between"
-    >
-
-        <div
-            id="serviceDots"
-            class="flex items-center gap-2"
-            aria-label="Service carousel navigation"
-        ></div>
-
-
-        <a
-            href="services.php"
-            class="hidden sm:inline-flex items-center gap-2 text-sm font-bold text-emerald-700"
-            aria-label="Explore all home care services offered by <?= h($organization) ?>"
-        >
-
-            Explore all services
-
-            <span aria-hidden="true">
-                →
-            </span>
-
-        </a>
-
-    </div>
-
-
-</div>
-
-
-</section>
-
-<!-- =========================================================
-     TOURS
-========================================================= -->
-
-<?php if ($tours): ?>
-
-<section
-    class="relative overflow-hidden bg-white py-24"
-    aria-labelledby="tours-heading"
->
-
-
-<div
-    class="max-w-7xl mx-auto px-5"
->
-
-
-    <div
-        class="flex flex-col md:flex-row md:items-end justify-between gap-6 mb-12"
-    >
-
-        <div>
-
-            <div
-                class="reveal flex items-center gap-3 text-xs font-bold uppercase tracking-[.2em] text-emerald-700"
-            >
-
-                <span
-                    class="w-8 h-px bg-emerald-600"
-                    aria-hidden="true"
-                ></span>
-
-                Visit us
-
+          </div>
+
+          <div class="why-image-stack fade-in fade-in-delay-1" aria-hidden="true">
+            <img
+              src="bedroom4_updated.jpg"
+              alt="Spacious, comfortable private room at <?=front_h($organization)?>"
+              class="why-img-main"
+              width="450" height="400"
+            />
+            <img
+              src="BathroomWide.jpg"
+              alt="Accessible, well-equipped bathroom"
+              class="why-img-accent"
+              width="260" height="220"
+            />
+            <div class="why-stat-card">
+              <div class="why-stat-dot" aria-hidden="true"></div>
+              <span>Staff awake &amp; caring 24/7</span>
             </div>
+          </div>
+        </div>
+      </div>
+    </section>
 
-
-            <h2
-                id="tours-heading"
-                class="reveal reveal-delay-1 mt-5 text-4xl md:text-5xl font-black tracking-[-.04em]"
-            >
-
-                Upcoming tours.
-
-            </h2>
-
-
-            <p
-                class="reveal reveal-delay-2 mt-3 text-slate-500"
-            >
-
-                Come meet the team and experience our community.
-
-            </p>
-
+    <!-- ===== TESTIMONIALS ===== -->
+    <section class="testimonials" id="testimonials" aria-labelledby="testimonials-heading">
+      <div class="container">
+        <div class="text-center fade-in">
+          <span class="section-label">Real Families. Real Words.</span>
+          <h2 id="testimonials-heading" class="section-title">They Were Where You Are. Here Is What They Found.</h2>
+          <p class="section-subtitle">Every family who walks through our door shares the same worry: am I making the right choice? Here is what they tell us afterward.</p>
         </div>
 
-    </div>
+        <div class="testimonials-grid" role="list">
 
-
-    <div
-        class="grid md:grid-cols-3 gap-5"
-    >
-
-        <?php foreach ($tours as $index => $t): ?>
-
-            <article
-                class="reveal group rounded-3xl border border-slate-200 bg-white p-6 hover:-translate-y-1 hover:shadow-xl transition-all duration-500"
-            >
-
-                <div
-                    class="flex gap-4"
-                >
-
-                    <div
-                        class="rounded-2xl bg-emerald-50 text-emerald-800 p-3 text-center min-w-[64px] h-fit"
-                        aria-hidden="true"
-                    >
-
-                        <div
-                            class="text-xs font-bold uppercase"
-                        >
-
-                            <?= date('M', strtotime($t['tour_date'])) ?>
-
-                        </div>
-
-
-                        <div
-                            class="text-2xl font-black"
-                        >
-
-                            <?= date('d', strtotime($t['tour_date'])) ?>
-
-                        </div>
-
-                    </div>
-
-
-                    <div>
-
-                        <h3
-                            class="font-bold text-lg text-slate-950"
-                        >
-
-                            <?= h($t['title']) ?>
-
-                        </h3>
-
-
-                        <p
-                            class="text-sm text-slate-500 mt-1"
-                        >
-
-                            <span aria-hidden="true">◷</span>
-
-                            <?= h(
-                                $t['tour_time']
-                                    ? date('g:i A', strtotime($t['tour_time']))
-                                    : 'Time TBA'
-                            ) ?>
-
-                        </p>
-
-                    </div>
-
-                </div>
-
-
-                <p
-                    class="mt-5 text-sm font-medium text-slate-700"
-                >
-
-                    <span aria-hidden="true">⌖</span>
-
-                    <?= h($t['location']) ?>
-
-                </p>
-
-
-                <p
-                    class="mt-3 text-sm text-slate-500 leading-6"
-                >
-
-                    <?= h(excerpt($t['description'], 120)) ?>
-
-                </p>
-
-            </article>
-
-        <?php endforeach; ?>
-
-    </div>
-
-</div>
-
-
-</section>
-
-<?php endif; ?>
-
-<!-- =========================================================
-     GALLERY
-========================================================= -->
-
-<?php if ($gallery): ?>
-
-<section
-    class="relative overflow-hidden bg-slate-950 text-white py-24 lg:py-32"
-    id="gallerySection"
-    aria-labelledby="gallery-heading"
->
-
-
-<!-- Background decoration -->
-
-<div
-    class="pointer-events-none absolute top-10 right-10 w-48 h-48 rounded-full border border-emerald-400/10"
-    aria-hidden="true"
-></div>
-
-
-<div
-    class="pointer-events-none absolute bottom-0 -left-32 w-96 h-96 rounded-full bg-emerald-500/5 blur-3xl"
-    aria-hidden="true"
-></div>
-
-
-<div
-    class="relative max-w-7xl mx-auto px-5"
->
-
-
-    <!-- HEADER -->
-
-    <div
-        class="flex flex-col md:flex-row md:items-end justify-between gap-7 mb-12"
-    >
-
-        <div
-            class="max-w-2xl"
-        >
-
-            <div
-                class="reveal flex items-center gap-3 text-xs font-bold uppercase tracking-[.2em] text-emerald-300"
-            >
-
-                <span
-                    class="w-8 h-px bg-emerald-400"
-                    aria-hidden="true"
-                ></span>
-
-                Our community
-
+          <article class="testimonial-card fade-in fade-in-delay-1" role="listitem">
+            <div class="stars" aria-label="5 out of 5 stars">★★★★★</div>
+            <blockquote>
+              "Choosing this home for my mother was the best decision our family could have made. The caregivers genuinely know her — her favorite songs, her stories, her little habits. She is not simply cared for, she is treasured. I rest easy knowing she is in such loving hands."
+            </blockquote>
+            <div class="testimonial-author">
+              <div class="author-avatar" aria-hidden="true">A</div>
+              <div class="author-info">
+                <strong>Amanda R.</strong>
+                <span>Daughter of resident, Marysville WA</span>
+              </div>
             </div>
-
-
-            <h2
-                id="gallery-heading"
-                class="reveal reveal-delay-1 mt-5 text-4xl md:text-5xl lg:text-6xl font-black tracking-[-.045em]"
-            >
-
-                Moments that matter.
-
-            </h2>
-
-
-            <p
-                class="reveal reveal-delay-2 mt-5 text-slate-400 leading-7 max-w-xl"
-            >
-
-                A glimpse into the people, places and moments that make our community feel like home.
-
-            </p>
-
-        </div>
-
-
-        <!-- CONTROLS -->
-
-        <div
-            class="flex items-center gap-3"
-        >
-
-            <button
-                type="button"
-                id="galleryPrev"
-                class="w-12 h-12 rounded-full border border-white/15 bg-white/5 hover:bg-emerald-600 hover:border-emerald-600 flex items-center justify-center transition"
-                aria-label="Previous community gallery image"
-            >
-                ←
-            </button>
-
-
-            <button
-                type="button"
-                id="galleryNext"
-                class="w-12 h-12 rounded-full border border-white/15 bg-white/5 hover:bg-emerald-600 hover:border-emerald-600 flex items-center justify-center transition"
-                aria-label="Next community gallery image"
-            >
-                →
-            </button>
-
-        </div>
-
-    </div>
-
-
-    <!-- GALLERY TRACK -->
-
-    <div
-        id="galleryViewport"
-        class="carousel-viewport"
-        aria-label="Community photo gallery"
-    >
-
-        <div
-            id="galleryTrack"
-            class="carousel-track"
-        >
-
-            <?php foreach ($gallery as $galleryIndex => $g): ?>
-
-                <a
-                    href="gallery.php"
-                    class="gallery-card group shrink-0 w-[88%] sm:w-[60%] md:w-[47%] lg:w-[32%] aspect-[4/3] overflow-hidden rounded-3xl bg-slate-900"
-                    aria-label="View <?= h($g['title']) ?> in the community gallery"
-                >
-
-
-                    <img
-                        src="<?= h('./admin/' . assetImage($g['image_url'])) ?>"
-                        alt="<?= h($g['title'] . ' - ' . $organization . ' community') ?>"
-                        class="w-full h-full object-cover"
-                        width="1200"
-                        height="900"
-                        loading="lazy"
-                        decoding="async"
-                    >
-
-
-                    <!-- OVERLAY -->
-
-                    <div
-                        class="absolute inset-0 bg-gradient-to-t from-black/90 via-black/10 to-transparent"
-                        aria-hidden="true"
-                    ></div>
-
-
-                    <!-- NUMBER -->
-
-                    <div
-                        class="absolute top-5 left-5"
-                        aria-hidden="true"
-                    >
-
-                        <span
-                            class="inline-flex items-center justify-center w-9 h-9 rounded-full bg-black/30 backdrop-blur border border-white/10 text-xs font-bold"
-                        >
-
-                            <?= str_pad($galleryIndex + 1, 2, '0', STR_PAD_LEFT) ?>
-
-                        </span>
-
-                    </div>
-
-
-                    <!-- CONTENT -->
-
-                    <div
-                        class="absolute bottom-0 left-0 right-0 p-6"
-                    >
-
-                        <div
-                            class="text-[11px] uppercase tracking-[.18em] text-emerald-300 font-bold"
-                        >
-                            Community
-                        </div>
-
-
-                        <div
-                            class="mt-2 text-lg font-bold"
-                        >
-
-                            <?= h($g['title']) ?>
-
-                        </div>
-
-
-                        <div
-                            class="mt-2 flex items-center gap-2 text-xs text-white/60 group-hover:text-emerald-300 transition"
-                        >
-
-                            View gallery
-
-                            <span
-                                class="group-hover:translate-x-1 transition"
-                                aria-hidden="true"
-                            >
-                                →
-                            </span>
-
-                        </div>
-
-                    </div>
-
-
-                </a>
-
-            <?php endforeach; ?>
-
-        </div>
-
-    </div>
-
-
-    <div
-        class="mt-9 flex items-center justify-between"
-    >
-
-        <div
-            id="galleryDots"
-            class="dark-dots flex gap-2"
-            aria-label="Gallery carousel navigation"
-        ></div>
-
-
-        <a
-            href="gallery.php"
-            class="hidden sm:inline-flex items-center gap-2 text-sm font-bold text-emerald-300"
-            aria-label="View the full <?= h($organization) ?> community gallery"
-        >
-
-            View full gallery
-
-            <span aria-hidden="true">
-                →
-            </span>
-
-        </a>
-
-    </div>
-
-
-</div>
-
-
-</section>
-
-<?php endif; ?>
-
-<!-- =========================================================
-     BLOG
-========================================================= -->
-
-<?php if ($blogs): ?>
-
-<section
-    class="relative overflow-hidden bg-white py-24 lg:py-32"
-    id="blogSection"
-    aria-labelledby="blog-heading"
->
-
-
-<!-- Decoration -->
-
-<div
-    class="pointer-events-none absolute -right-32 top-10 h-80 w-80 rounded-full bg-emerald-50 blur-3xl"
-    aria-hidden="true"
-></div>
-
-
-<div
-    class="relative max-w-7xl mx-auto px-5"
->
-
-
-    <!-- HEADER -->
-
-    <div
-        class="flex flex-col md:flex-row md:items-end justify-between gap-7 mb-12"
-    >
-
-        <div
-            class="max-w-2xl"
-        >
-
-            <div
-                class="reveal flex items-center gap-3 text-xs font-bold uppercase tracking-[.2em] text-emerald-700"
-            >
-
-                <span
-                    class="w-8 h-px bg-emerald-600"
-                    aria-hidden="true"
-                ></span>
-
-                Latest updates
-
+          </article>
+
+          <article class="testimonial-card fade-in fade-in-delay-2" role="listitem">
+            <div class="stars" aria-label="5 out of 5 stars">★★★★★</div>
+            <blockquote>
+              "After touring several facilities, <?=front_h($organization)?> stood out right away. It genuinely feels like a home — warm, clean, and full of laughter. My father has thrived here, and the 24/7 awake staff gives our whole family real peace of mind."
+            </blockquote>
+            <div class="testimonial-author">
+              <div class="author-avatar" aria-hidden="true">D</div>
+              <div class="author-info">
+                <strong>David &amp; Karen P.</strong>
+                <span>Family of resident, Everett WA</span>
+              </div>
             </div>
-
-
-            <h2
-                id="blog-heading"
-                class="reveal reveal-delay-1 mt-5 text-4xl md:text-5xl lg:text-6xl font-black tracking-[-.045em]"
-            >
-
-                From our journal.
-
-            </h2>
-
-
-            <p
-                class="reveal reveal-delay-2 mt-5 text-slate-600 leading-7 max-w-xl"
-            >
-
-                Stories, helpful information and updates from our community.
-
-            </p>
-
-        </div>
-
-
-        <!-- CONTROLS -->
-
-        <div
-            class="flex items-center gap-3"
-        >
-
-            <button
-                type="button"
-                id="blogPrev"
-                class="w-12 h-12 rounded-full border border-slate-300 bg-white hover:bg-emerald-600 hover:border-emerald-600 hover:text-white flex items-center justify-center transition"
-                aria-label="Previous articles"
-            >
-                ←
-            </button>
-
-
-            <button
-                type="button"
-                id="blogNext"
-                class="w-12 h-12 rounded-full border border-slate-300 bg-white hover:bg-emerald-600 hover:border-emerald-600 hover:text-white flex items-center justify-center transition"
-                aria-label="Next articles"
-            >
-                →
-            </button>
-
-        </div>
-
-    </div>
-
-
-    <!-- BLOG TRACK -->
-
-    <div
-        id="blogViewport"
-        class="carousel-viewport"
-        aria-label="Latest articles"
-    >
-
-        <div
-            id="blogTrack"
-            class="carousel-track"
-        >
-
-            <?php foreach ($blogs as $b): ?>
-
-                <article
-                    class="blog-card group shrink-0 w-[88%] sm:w-[60%] md:w-[47%] lg:w-[32%]"
-                >
-
-
-                    <!-- IMAGE -->
-
-                    <a
-                        href="blog_detail.php?slug=<?= urlencode($b['slug']) ?>"
-                        class="relative block aspect-[16/10] overflow-hidden rounded-3xl bg-slate-100"
-                        aria-label="Read: <?= h($b['title']) ?>"
-                    >
-
-                        <img
-                            src="<?= h('./admin/' . assetImage($b['featured_image'])) ?>"
-                            alt="<?= h($b['title'] . ' - ' . $organization) ?>"
-                            class="blog-image w-full h-full object-cover"
-                            width="1200"
-                            height="750"
-                            loading="lazy"
-                            decoding="async"
-                        >
-
-
-                        <div
-                            class="absolute inset-0 bg-black/0 group-hover:bg-black/10 transition duration-500"
-                            aria-hidden="true"
-                        ></div>
-
-
-                        <div
-                            class="absolute right-5 bottom-5 w-11 h-11 rounded-full bg-white text-slate-900 flex items-center justify-center opacity-0 translate-y-3 group-hover:opacity-100 group-hover:translate-y-0 transition-all duration-500 shadow-lg"
-                            aria-hidden="true"
-                        >
-
-                            →
-
-                        </div>
-
-                    </a>
-
-
-                    <!-- CONTENT -->
-
-                    <div
-                        class="pt-6"
-                    >
-
-                        <div
-                            class="flex items-center gap-3 text-xs uppercase tracking-wider font-bold text-emerald-700"
-                        >
-
-                            <time
-                                datetime="<?= h(
-                                    date(
-                                        'Y-m-d',
-                                        strtotime(
-                                            $b['published_at']
-                                                ?: $b['created_at']
-                                        )
-                                    )
-                                ) ?>"
-                            >
-
-                                <?= h(
-                                    $b['published_at']
-                                        ? date('M d, Y', strtotime($b['published_at']))
-                                        : date('M d, Y', strtotime($b['created_at']))
-                                ) ?>
-
-                            </time>
-
-
-                            <span
-                                class="w-1 h-1 rounded-full bg-slate-300"
-                                aria-hidden="true"
-                            ></span>
-
-
-                            <span>
-                                Community
-                            </span>
-
-                        </div>
-
-
-                        <h3
-                            class="mt-3 text-xl md:text-2xl font-bold leading-7 text-slate-950 group-hover:text-emerald-700 transition"
-                        >
-
-                            <?= h($b['title']) ?>
-
-                        </h3>
-
-
-                        <p
-                            class="mt-3 text-sm text-slate-600 leading-7"
-                        >
-
-                            <?= h(
-                                excerpt(
-                                    $b['excerpt'] ?: $b['content']
-                                )
-                            ) ?>
-
-                        </p>
-
-
-                        <a
-                            href="blog_detail.php?slug=<?= urlencode($b['slug']) ?>"
-                            class="mt-6 inline-flex items-center gap-2 text-sm font-bold text-emerald-700 group-hover:gap-4 transition-all"
-                            aria-label="Read article: <?= h($b['title']) ?>"
-                        >
-
-                            Read article
-
-                            <span aria-hidden="true">
-                                →
-                            </span>
-
-                        </a>
-
-                    </div>
-
-
-                </article>
-
-            <?php endforeach; ?>
-
-        </div>
-
-    </div>
-
-
-    <div
-        class="mt-9 flex items-center justify-between"
-    >
-
-        <div
-            id="blogDots"
-            class="flex gap-2"
-            aria-label="Article carousel navigation"
-        ></div>
-
-
-        <a
-            href="blog.php"
-            class="hidden sm:inline-flex items-center gap-2 text-sm font-bold text-emerald-700"
-            aria-label="Read all articles from <?= h($organization) ?>"
-        >
-
-            View all articles
-
-            <span aria-hidden="true">
-                →
-            </span>
-
-        </a>
-
-    </div>
-
-
-</div>
-
-
-</section>
-
-<?php endif; ?>
-
-<!-- =========================================================
-     FINAL CTA
-========================================================= -->
-
-<section
-    class="relative overflow-hidden py-24 lg:py-32"
-    aria-labelledby="contact-heading"
->
-
-
-<div
-    class="max-w-7xl mx-auto px-5"
->
-
-    <div
-        class="relative overflow-hidden rounded-[2rem] bg-emerald-700 px-8 py-12 md:px-12 md:py-16 lg:px-16"
-    >
-
-
-        <!-- Background circles -->
-
-        <div
-            class="floating-decoration pointer-events-none absolute -right-20 -top-20 w-72 h-72 rounded-full border border-white/10"
-            aria-hidden="true"
-        ></div>
-
-
-        <div
-            class="floating-decoration-slow pointer-events-none absolute -bottom-24 right-32 w-48 h-48 rounded-full bg-white/5"
-            aria-hidden="true"
-        ></div>
-
-
-        <div
-            class="relative flex flex-col lg:flex-row lg:items-center justify-between gap-10"
-        >
-
-            <div
-                class="max-w-3xl"
-            >
-
-                <div
-                    class="reveal text-emerald-100 uppercase tracking-[.18em] text-xs font-bold"
-                >
-
-                    Let's connect
-
-                </div>
-
-
-                <h2
-                    id="contact-heading"
-                    class="reveal reveal-delay-1 mt-4 text-4xl md:text-5xl lg:text-6xl font-black tracking-[-.045em] text-white"
-                >
-
-                    Have questions about our care?
-
-                </h2>
-
-
-                <p
-                    class="reveal reveal-delay-2 mt-5 text-emerald-50 max-w-2xl text-lg leading-8"
-                >
-
-                    We are here to listen, answer your questions and help you find the right next step.
-
-                </p>
-
+          </article>
+
+          <article class="testimonial-card fade-in fade-in-delay-3" role="listitem">
+            <div class="stars" aria-label="5 out of 5 stars">★★★★★</div>
+            <blockquote>
+              "The personalized care my grandmother receives goes beyond anything I expected. The caregivers remember every small detail about her life. The way they honor her story moved our whole family — in the best possible way."
+            </blockquote>
+            <div class="testimonial-author">
+              <div class="author-avatar" aria-hidden="true">J</div>
+              <div class="author-info">
+                <strong>Julia N.</strong>
+                <span>Granddaughter of resident, Seattle WA</span>
+              </div>
             </div>
-
-
-            <a
-                href="contact.php"
-                class="premium-button shrink-0 inline-flex items-center justify-center gap-3 rounded-full bg-white text-emerald-800 px-8 py-4 font-bold"
-                aria-label="Contact <?= h($organization) ?>"
-            >
-
-                Contact Us
-
-                <span aria-hidden="true">
-                    →
-                </span>
-
-            </a>
+          </article>
 
         </div>
-
-
-    </div>
-
-</div>
-
-
-</section>
-
-</main>
-
-<!-- =========================================================
-     SEO STRUCTURED DATA
-========================================================= -->
-
-<!-- Organization structured data -->
-
-<script type="application/ld+json">
-<?= json_encode(
-    [
-        '@context' => 'https://schema.org',
-        '@type' => 'Organization',
-        'name' => $organization,
-        'url' => $canonicalUrl,
-        'logo' => $seoImage,
-        'description' => $pageDescription
-    ],
-    JSON_UNESCAPED_SLASHES |
-    JSON_UNESCAPED_UNICODE |
-    JSON_PRETTY_PRINT
-) ?>
-</script>
-
-<?php if ($blogs): ?>
-
-<!-- Blog listing structured data -->
-
-<script type="application/ld+json">
-<?= json_encode(
-    [
-        '@context' => 'https://schema.org',
-        '@type' => 'ItemList',
-        'name' => 'Latest articles from ' . $organization,
-        'numberOfItems' => count($blogs),
-        'itemListElement' => array_map(
-            function ($blog, $index) {
-
-                return [
-                    '@type' => 'ListItem',
-                    'position' => $index + 1,
-                    'name' => $blog['title'],
-                    'url' =>
-                        'https://' .
-                        ($_SERVER['HTTP_HOST'] ?? 'example.com') .
-                        '/blog_detail.php?slug=' .
-                        urlencode($blog['slug'])
-                ];
-
-            },
-            $blogs,
-            array_keys($blogs)
-        )
-    ],
-    JSON_UNESCAPED_SLASHES |
-    JSON_UNESCAPED_UNICODE |
-    JSON_PRETTY_PRINT
-) ?>
-</script>
-
-<?php endif; ?>
-
-<?php require_once __DIR__ . '/footer.php'; ?>
-
-<!-- =========================================================
-     JAVASCRIPT
-========================================================= -->
-
-<script>
-
-document.addEventListener(
-    'DOMContentLoaded',
-    function () {
-
-
-        /* =====================================================
-           HERO SLIDER
-        ===================================================== */
-
-        const heroSlides =
-            Array.from(
-                document.querySelectorAll(
-                    '[data-hero-slide]'
-                )
-            );
-
-
-        const heroDots =
-            Array.from(
-                document.querySelectorAll(
-                    '[data-hero-dot]'
-                )
-            );
-
-
-        const heroNext =
-            document.getElementById(
-                'heroNext'
-            );
-
-
-        const heroPrev =
-            document.getElementById(
-                'heroPrev'
-            );
-
-
-        const heroCurrent =
-            document.getElementById(
-                'heroCurrent'
-            );
-
-
-        let heroIndex = 0;
-
-        let heroTimer = null;
-
-
-        function showHero(index) {
-
-
-            if (!heroSlides.length) {
-                return;
-            }
-
-
-            if (index >= heroSlides.length) {
-                index = 0;
-            }
-
-
-            if (index < 0) {
-                index =
-                    heroSlides.length - 1;
-            }
-
-
-            heroSlides.forEach(
-                function (slide, i) {
-
-                    slide.classList.toggle(
-                        'active',
-                        i === index
-                    );
-
-                }
-            );
-
-
-            heroDots.forEach(
-                function (dot, i) {
-
-                    const active =
-                        i === index;
-
-
-                    dot.classList.toggle(
-                        'bg-white',
-                        active
-                    );
-
-
-                    dot.classList.toggle(
-                        'w-10',
-                        active
-                    );
-
-
-                    dot.classList.toggle(
-                        'bg-white/30',
-                        !active
-                    );
-
-
-                    dot.classList.toggle(
-                        'w-2',
-                        !active
-                    );
-
-
-                    dot.setAttribute(
-                        'aria-selected',
-                        active
-                            ? 'true'
-                            : 'false'
-                    );
-
-                }
-            );
-
-
-            if (heroCurrent) {
-
-                heroCurrent.textContent =
-                    String(index + 1).padStart(
-                        2,
-                        '0'
-                    );
-
-            }
-
-
-            heroIndex = index;
-
-        }
-
-
-        function nextHero() {
-
-            showHero(
-                heroIndex + 1
-            );
-
-        }
-
-
-        function previousHero() {
-
-            showHero(
-                heroIndex - 1
-            );
-
-        }
-
-
-        function startHeroTimer() {
-
-            clearInterval(
-                heroTimer
-            );
-
-
-            if (heroSlides.length <= 1) {
-                return;
-            }
-
-
-            heroTimer =
-                setInterval(
-                    nextHero,
-                    6000
-                );
-
-        }
-
-
-        heroDots.forEach(
-            function (dot) {
-
-                dot.addEventListener(
-                    'click',
-                    function () {
-
-                        showHero(
-                            Number(
-                                dot.dataset.heroDot
-                            )
-                        );
-
-                        startHeroTimer();
-
-                    }
-                );
-
-            }
-        );
-
-
-        if (heroNext) {
-
-            heroNext.addEventListener(
-                'click',
-                function () {
-
-                    nextHero();
-
-                    startHeroTimer();
-
-                }
-            );
-
-        }
-
-
-        if (heroPrev) {
-
-            heroPrev.addEventListener(
-                'click',
-                function () {
-
-                    previousHero();
-
-                    startHeroTimer();
-
-                }
-            );
-
-        }
-
-
-        showHero(0);
-
-        startHeroTimer();
-
-
-        /* =====================================================
-           GENERIC CAROUSEL
-        ===================================================== */
-
-        function createCarousel(config) {
-
-
-            const track =
-                document.getElementById(
-                    config.track
-                );
-
-
-            const viewport =
-                document.getElementById(
-                    config.viewport
-                );
-
-
-            const nextButton =
-                document.getElementById(
-                    config.next
-                );
-
-
-            const prevButton =
-                document.getElementById(
-                    config.prev
-                );
-
-
-            const dotsContainer =
-                document.getElementById(
-                    config.dots
-                );
-
-
-            if (!track || !viewport) {
-                return;
-            }
-
-
-            const items =
-                Array.from(
-                    track.children
-                );
-
-
-            if (!items.length) {
-                return;
-            }
-
-
-            let current = 0;
-
-            let timer = null;
-
-            let isHovering = false;
-
-            let touchStartX = 0;
-
-
-            /* -------------------------------------------------
-               VISIBLE ITEMS
-            ------------------------------------------------- */
-
-            function visibleItems() {
-
-
-                if (window.innerWidth >= 1024) {
-                    return 3;
-                }
-
-
-                if (window.innerWidth >= 768) {
-                    return 2;
-                }
-
-
-                if (window.innerWidth >= 640) {
-                    return 1.5;
-                }
-
-
-                return 1;
-
-            }
-
-
-            /* -------------------------------------------------
-               STEP
-            ------------------------------------------------- */
-
-            function getStep() {
-
-
-                if (!items[0]) {
-                    return 0;
-                }
-
-
-                const width =
-                    items[0].getBoundingClientRect().width;
-
-
-                const style =
-                    window.getComputedStyle(
-                        track
-                    );
-
-
-                const gap =
-                    parseFloat(
-                        style.gap || '0'
-                    );
-
-
-                return width + gap;
-
-            }
-
-
-            /* -------------------------------------------------
-               MAX INDEX
-            ------------------------------------------------- */
-
-            function maxIndex() {
-
-                return Math.max(
-                    0,
-                    Math.ceil(
-                        items.length -
-                        visibleItems()
-                    )
-                );
-
-            }
-
-
-            /* -------------------------------------------------
-               DOTS
-            ------------------------------------------------- */
-
-            function buildDots() {
-
-
-                if (!dotsContainer) {
-                    return;
-                }
-
-
-                dotsContainer.innerHTML =
-                    '';
-
-
-                const total =
-                    maxIndex() + 1;
-
-
-                for (
-                    let i = 0;
-                    i < total;
-                    i++
-                ) {
-
-
-                    const dot =
-                        document.createElement(
-                            'button'
-                        );
-
-
-                    dot.type =
-                        'button';
-
-
-                    dot.className =
-                        'carousel-dot';
-
-
-                    dot.setAttribute(
-                        'aria-label',
-                        'Go to carousel slide ' +
-                        (i + 1)
-                    );
-
-
-                    dot.addEventListener(
-                        'click',
-                        function () {
-
-                            current = i;
-
-                            update();
-
-                            restart();
-
-                        }
-                    );
-
-
-                    dotsContainer.appendChild(
-                        dot
-                    );
-
-                }
-
-
-                updateDots();
-
-            }
-
-
-            /* -------------------------------------------------
-               DOT UPDATE
-            ------------------------------------------------- */
-
-            function updateDots() {
-
-
-                if (!dotsContainer) {
-                    return;
-                }
-
-
-                const dots =
-                    Array.from(
-                        dotsContainer.children
-                    );
-
-
-                dots.forEach(
-                    function (dot, i) {
-
-                        dot.classList.toggle(
-                            'active',
-                            i === current
-                        );
-
-                    }
-                );
-
-            }
-
-
-            /* -------------------------------------------------
-               UPDATE
-            ------------------------------------------------- */
-
-            function update() {
-
-
-                const max =
-                    maxIndex();
-
-
-                if (current > max) {
-                    current = 0;
-                }
-
-
-                if (current < 0) {
-                    current = max;
-                }
-
-
-                track.style.transform =
-                    'translate3d(-' +
-                    (
-                        current *
-                        getStep()
-                    ) +
-                    'px,0,0)';
-
-
-                updateDots();
-
-            }
-
-
-            /* -------------------------------------------------
-               NEXT
-            ------------------------------------------------- */
-
-            function next() {
-
-
-                const max =
-                    maxIndex();
-
-
-                if (current >= max) {
-
-                    current = 0;
-
-                } else {
-
-                    current++;
-
-                }
-
-
-                update();
-
-            }
-
-
-            /* -------------------------------------------------
-               PREVIOUS
-            ------------------------------------------------- */
-
-            function previous() {
-
-
-                const max =
-                    maxIndex();
-
-
-                if (current <= 0) {
-
-                    current = max;
-
-                } else {
-
-                    current--;
-
-                }
-
-
-                update();
-
-            }
-
-
-            /* -------------------------------------------------
-               AUTOPLAY
-            ------------------------------------------------- */
-
-            function start() {
-
-
-                clearInterval(
-                    timer
-                );
-
-
-                if (
-                    items.length <=
-                    Math.ceil(
-                        visibleItems()
-                    )
-                ) {
-
-                    return;
-
-                }
-
-
-                timer =
-                    setInterval(
-                        function () {
-
-                            if (!isHovering) {
-                                next();
-                            }
-
-                        },
-                        config.autoplay
-                    );
-
-            }
-
-
-            function restart() {
-
-                start();
-
-            }
-
-
-            /* -------------------------------------------------
-               BUTTONS
-            ------------------------------------------------- */
-
-            if (nextButton) {
-
-                nextButton.addEventListener(
-                    'click',
-                    function () {
-
-                        next();
-
-                        restart();
-
-                    }
-                );
-
-            }
-
-
-            if (prevButton) {
-
-                prevButton.addEventListener(
-                    'click',
-                    function () {
-
-                        previous();
-
-                        restart();
-
-                    }
-                );
-
-            }
-
-
-            /* -------------------------------------------------
-               HOVER PAUSE
-            ------------------------------------------------- */
-
-            viewport.addEventListener(
-                'mouseenter',
-                function () {
-
-                    isHovering = true;
-
-                }
-            );
-
-
-            viewport.addEventListener(
-                'mouseleave',
-                function () {
-
-                    isHovering = false;
-
-                }
-            );
-
-
-            /* -------------------------------------------------
-               TOUCH SWIPE
-            ------------------------------------------------- */
-
-            viewport.addEventListener(
-                'touchstart',
-                function (event) {
-
-                    touchStartX =
-                        event.changedTouches[0].screenX;
-
-                },
-                {
-                    passive: true
-                }
-            );
-
-
-            viewport.addEventListener(
-                'touchend',
-                function (event) {
-
-                    const touchEndX =
-                        event.changedTouches[0].screenX;
-
-
-                    const difference =
-                        touchStartX -
-                        touchEndX;
-
-
-                    if (
-                        Math.abs(difference) <
-                        40
-                    ) {
-
-                        return;
-
-                    }
-
-
-                    if (difference > 0) {
-
-                        next();
-
-                    } else {
-
-                        previous();
-
-                    }
-
-
-                    restart();
-
-                },
-                {
-                    passive: true
-                }
-            );
-
-
-            /* -------------------------------------------------
-               RESIZE
-            ------------------------------------------------- */
-
-            let resizeTimer;
-
-
-            window.addEventListener(
-                'resize',
-                function () {
-
-                    clearTimeout(
-                        resizeTimer
-                    );
-
-
-                    resizeTimer =
-                        setTimeout(
-                            function () {
-
-                                buildDots();
-
-                                update();
-
-                            },
-                            150
-                        );
-
-                }
-            );
-
-
-            /* -------------------------------------------------
-               INIT
-            ------------------------------------------------- */
-
-            buildDots();
-
-            update();
-
-            start();
-
-        }
-
-
-        /* =====================================================
-           SERVICES
-        ===================================================== */
-
-        createCarousel({
-
-            track:
-                'serviceTrack',
-
-            viewport:
-                'serviceViewport',
-
-            next:
-                'serviceNext',
-
-            prev:
-                'servicePrev',
-
-            dots:
-                'serviceDots',
-
-            autoplay:
-                4200
-
-        });
-
-
-        /* =====================================================
-           GALLERY
-        ===================================================== */
-
-        createCarousel({
-
-            track:
-                'galleryTrack',
-
-            viewport:
-                'galleryViewport',
-
-            next:
-                'galleryNext',
-
-            prev:
-                'galleryPrev',
-
-            dots:
-                'galleryDots',
-
-            autoplay:
-                4500
-
-        });
-
-
-        /* =====================================================
-           BLOG
-        ===================================================== */
-
-        createCarousel({
-
-            track:
-                'blogTrack',
-
-            viewport:
-                'blogViewport',
-
-            next:
-                'blogNext',
-
-            prev:
-                'blogPrev',
-
-            dots:
-                'blogDots',
-
-            autoplay:
-                5500
-
-        });
-
-
-        /* =====================================================
-           SCROLL REVEAL
-        ===================================================== */
-
-        const revealElements =
-            document.querySelectorAll(
-                '.reveal'
-            );
-
-
-        if (
-            'IntersectionObserver'
-            in window
-        ) {
-
-
-            const observer =
-                new IntersectionObserver(
-                    function (
-                        entries
-                    ) {
-
-
-                        entries.forEach(
-                            function (
-                                entry
-                            ) {
-
-
-                                if (
-                                    entry.isIntersecting
-                                ) {
-
-
-                                    entry.target.classList.add(
-                                        'is-visible'
-                                    );
-
-
-                                    observer.unobserve(
-                                        entry.target
-                                    );
-
-
-                                }
-
-                            }
-                        );
-
-
-                    },
-                    {
-                        threshold:
-                            .10,
-
-                        rootMargin:
-                            '0px 0px -50px 0px'
-                    }
-                );
-
-
-            revealElements.forEach(
-                function (element) {
-
-                    observer.observe(
-                        element
-                    );
-
-                }
-            );
-
-
-        } else {
-
-
-            revealElements.forEach(
-                function (element) {
-
-                    element.classList.add(
-                        'is-visible'
-                    );
-
-                }
-            );
-
-        }
-
-
-        /* =====================================================
-           CARD REVEAL
-        ===================================================== */
-
-        const cards =
-            document.querySelectorAll(
-                '.service-card, .blog-card, .gallery-card'
-            );
-
-
-        if (
-            'IntersectionObserver'
-            in window
-        ) {
-
-
-            const cardObserver =
-                new IntersectionObserver(
-                    function (
-                        entries
-                    ) {
-
-
-                        entries.forEach(
-                            function (
-                                entry
-                            ) {
-
-
-                                if (
-                                    entry.isIntersecting
-                                ) {
-
-
-                                    entry.target.style.opacity =
-                                        '1';
-
-
-                                    entry.target.style.transform =
-                                        'translateY(0)';
-
-
-                                    cardObserver.unobserve(
-                                        entry.target
-                                    );
-
-                                }
-
-                            }
-                        );
-
-
-                    },
-                    {
-                        threshold:
-                            .08
-                    }
-                );
-
-
-            cards.forEach(
-                function (
-                    card,
-                    index
-                ) {
-
-
-                    card.style.opacity =
-                        '0';
-
-
-                    card.style.transform =
-                        'translateY(25px)';
-
-
-                    card.style.transition =
-                        'opacity .7s ease ' +
-                        Math.min(
-                            index * .06,
-                            .4
-                        ) +
-                        's, transform .7s cubic-bezier(.22,1,.36,1) ' +
-                        Math.min(
-                            index * .06,
-                            .4
-                        ) +
-                        's';
-
-
-                    cardObserver.observe(
-                        card
-                    );
-
-                }
-            );
-
-        }
-
-
-        /* =====================================================
-           PAUSE HERO WHEN TAB IS NOT ACTIVE
-        ===================================================== */
-
-        document.addEventListener(
-            'visibilitychange',
-            function () {
-
-                if (
-                    document.hidden
-                ) {
-
-                    clearInterval(
-                        heroTimer
-                    );
-
-                } else {
-
-                    startHeroTimer();
-
-                }
-
-            }
-        );
-
-
-    }
-
-);
-
-</script>
+      </div>
+    </section>
+
+    <!-- ===== CTA BANNER ===== -->
+    <section class="cta-banner" aria-labelledby="cta-heading">
+      <div class="container">
+        <div class="cta-banner-inner fade-in">
+          <div class="cta-banner-content">
+            <h2 id="cta-heading">You Do Not Have to Figure This Out Alone.</h2>
+            <p>Rooms are available now. A tour takes about 30 minutes, costs nothing, and carries no obligation. Come see the home, meet the team, and ask us anything. Most families tell us they wish they had called sooner.</p>
+          </div>
+          <div class="cta-banner-actions">
+            <a href="schedule.php" class="btn btn-outline-white">Schedule a Free Tour — No Pressure</a>
+            <a href="tel:<?=front_phone_href($phone)?>" class="btn" style="background:white; color:var(--primary); font-weight:600;">📞 Call or Text <?=front_h($phone)?></a>
+          </div>
+        </div>
+      </div>
+    </section>
+
+  </main>
+
+  <!-- ===== FOOTER ===== -->
+  <?php include 'footer.php'; ?>
+
+    <script data-cfasync="false" src=""></script><script src="script.js"></script>
+
+</body>
+
+<!-- Mirrored from https://annahomecareeverett.com/ by HTTrack Website Copier/3.x [XR&CO], Wed, 16 Sep 2026 20:50:38 GMT -->
+</html>

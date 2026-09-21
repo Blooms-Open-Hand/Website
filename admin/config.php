@@ -1,13 +1,14 @@
 <?php
 // CHANGE THESE DATABASE SETTINGS FOR YOUR SERVER
 define('DB_HOST', 'localhost');
-define('DB_NAME', 'blootqwr_db');
-define('DB_USER', 'blootqwr_admin');
-define('DB_PASS', '@op10928725');
+define('DB_NAME', 'home_care_db');
+define('DB_USER', 'root');
+define('DB_PASS', 'root');
 
 session_start();
 
-function db(): PDO {
+function db(): PDO
+{
     static $pdo = null;
     if ($pdo) return $pdo;
 
@@ -39,7 +40,8 @@ function db(): PDO {
     }
 }
 
-function installDatabase(PDO $pdo): void {
+function installDatabase(PDO $pdo): void
+{
     $pdo->exec("CREATE TABLE IF NOT EXISTS banners (
         id INT AUTO_INCREMENT PRIMARY KEY,
         title VARCHAR(255) NOT NULL,
@@ -110,16 +112,19 @@ function installDatabase(PDO $pdo): void {
     }
 }
 
-function h($value): string {
+function h($value): string
+{
     return htmlspecialchars((string)$value, ENT_QUOTES, 'UTF-8');
 }
 
-function redirect(string $url): never {
+function redirect(string $url): never
+{
     header('Location: ' . $url);
     exit;
 }
 
-function flash(?string $message = null, string $type = 'success') {
+function flash(?string $message = null, string $type = 'success')
+{
     if ($message !== null) {
         $_SESSION['flash'] = [$message, $type];
         return;
@@ -130,4 +135,3 @@ function flash(?string $message = null, string $type = 'success') {
 }
 
 db();
-?>

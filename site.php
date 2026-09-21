@@ -1,8 +1,30 @@
 <?php
-require_once __DIR__.'/config.php';
+/**
+ * Front-end database integration for the existing Anna Home Care design.
+ * Uses the same database/configuration as the admin panel.
+ */
+$configCandidates = [
+    __DIR__ . '/admin/config.php',
+    __DIR__ . '/../admin/config.php',
+];
+$configLoaded = false;
+foreach ($configCandidates as $candidate) {
+    if (is_file($candidate)) {
+        require_once $candidate;
+        $configLoaded = true;
+        break;
+    }
+}
+if (!$configLoaded) {
+    die('Admin database configuration was not found. Place this frontend beside the admin folder.');
+}
+
 $pdo = db();
 
-function setting(string $key, string $fallback=''): string {
+function front_h($value): string {
+    return htmlspecialchars((string)$value, ENT_QUOTES, 'UTF-8');
+}
+function front_setting(string $key, string $default = ''): string {
     global $pdo;
     static $cache = null;
     if ($cache === null) {
@@ -13,32 +35,54 @@ function setting(string $key, string $fallback=''): string {
             }
         } catch (Throwable $e) {}
     }
-    return $cache[$key] ?? $fallback;
+    return trim((string)($cache[$key] ?? $default));
+}
+function front_phone_href(string $phone): string {
+    return preg_replace('/[^0-9+]/', '', $phone);
+}
+function front_image(string $path, string $fallback = ''): string {
+    $path = trim($path);
+    if ($path === '') return $fallback;
+    // Admin-uploaded relative paths are stored as uploads/images/...
+    if (preg_match('~^https?://~i', $path) || str_starts_with($path, '/')) return $path;
+    if (str_starts_with($path, 'admin/')) return $path;
+    if (str_starts_with($path, 'uploads/')) return 'admin/' . $path;
+    return $path;
+}
+function front_blog_category(string $title): string {
+    $t = strtolower($title);
+    if (preg_match('/medicaid|pay|cost|price|fund|financial/', $t)) return 'costs';
+    if (preg_match('/alzheimer|dementia|memory|parkinson/', $t)) return 'memory';
+    if (preg_match('/tour|checklist|choose|moving|signs|parent/', $t)) return 'family';
+    if (preg_match('/health|caregiver|burnout|isolation|loneliness/', $t)) return 'health';
+    return 'all';
+}
+function front_date(string $date): string {
+    $ts = strtotime($date);
+    return $ts ? date('F j, Y', $ts) : '';
+}
+function front_time(?string $time): string {
+    if (!$time) return '';
+    $ts = strtotime($time);
+    return $ts ? date('g:i A', $ts) : '';
 }
 
-function assetImage(?string $url, string $fallback='https://images.unsplash.com/photo-1559839734-2b71ea197ec2?auto=format&fit=crop&w=1200&q=85'): string {
-    $url = trim((string)$url);
-    if ($url === '') return $fallback;
-    if (preg_match('/^https?:\/\//i', $url)) return $url;
-    return ltrim($url, '/');
-}
+$organization = front_setting('organization_name', 'BLOOMS OPEN HAND LLC');
+$phone = front_setting('phone', '+1 (240) 643-1344');
+$email = front_setting('email', '');
+$address = front_setting('address', '7229 69th Ave NE, Marysville, WA 98270');
+$mapsUrl = front_setting('google_maps_url', '');
+$facebook = front_setting('facebook', '');
+$instagram = front_setting('instagram', '');
+$linkedin = front_setting('linkedin', '');
+$workingHours = front_setting('working_hours', '');
 
-function excerpt(string $text, int $length=145): string {
-    $text = trim(strip_tags($text));
-    return mb_strlen($text) > $length ? mb_substr($text,0,$length).'…' : $text;
-}
+$publishedBanners = $pdo->query("SELECT * FROM banners WHERE status='published' ORDER BY id DESC")->fetchAll();
+$publishedGallery = $pdo->query("SELECT * FROM gallery WHERE status='published' ORDER BY id DESC")->fetchAll();
+$publishedBlogs = $pdo->query("SELECT * FROM blogs WHERE status='published' ORDER BY COALESCE(published_at, created_at) DESC, id DESC")->fetchAll();
+$upcomingTours = $pdo->query("SELECT * FROM tours WHERE status='upcoming' AND tour_date >= CURDATE() ORDER BY tour_date ASC, tour_time ASC")->fetchAll();
 
-$organization = setting('organization_name', 'Home Care');
-$phone = setting('phone', '+1 (240) 643-1344');
-$email = setting('email', 'blomsopenhand24@gmail.com');
-$address = setting('address', '7229 69th Ave NE, Marysville, WA 98270');
-$maps = setting('google_maps_url', '');
-$facebook = setting('facebook', '#');
-$instagram = setting('instagram', '#');
-$linkedin = setting('linkedin', '#');
-$hours = setting('working_hours', 'Monday - Friday: 8:00 AM - 5:00 PM');
-
-function navActive(string $page): string {
-    return basename($_SERVER['PHP_SELF']) === $page ? 'text-emerald-700' : 'text-slate-600 hover:text-emerald-700';
+function front_base_href(string $page): string {
+    return $page;
 }
 ?>
