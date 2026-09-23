@@ -25,16 +25,7 @@
 </head>
 <body>
 
-  <div class="announce-bar" id="announceBar" role="alert">
-    <div class="announce-inner">
-      <span class="announce-dot" aria-hidden="true"></span>
-      <strong>Now Accepting Residents</strong>
-      <span class="announce-divider">·</span>
-      <span>Limited private rooms available — call today</span>
-      <a href="tel:<?=front_phone_href($phone)?>" class="announce-cta">Call <?=front_h($phone)?> →</a>
-    </div>
-    <button class="announce-close" id="announceClose" aria-label="Close">✕</button>
-  </div>
+  
 
   <!-- IDENTITY BAR -->
   <div class="identity-bar">

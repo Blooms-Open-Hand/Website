@@ -24,17 +24,7 @@
 </head>
 <body>
 
-  <!-- ANNOUNCEMENT BANNER -->
-  <div class="announce-bar" id="announceBar" role="alert">
-    <div class="announce-inner">
-      <span class="announce-dot" aria-hidden="true"></span>
-      <strong>Rooms Available Now</strong>
-      <span class="announce-divider">·</span>
-      <span>We have private rooms open — tours available 7 days a week, no appointment needed</span>
-      <a href="tel:<?=front_phone_href($phone)?>" class="announce-cta">Call <?=front_h($phone)?> →</a>
-    </div>
-    <button class="announce-close" id="announceClose" aria-label="Close">✕</button>
-  </div>
+ 
 
   <!-- IDENTITY BAR -->
   <div class="identity-bar">

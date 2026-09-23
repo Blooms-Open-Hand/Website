@@ -99,3 +99,68 @@ document.addEventListener('DOMContentLoaded', () => {
   }
 
 });
+
+/* ---- Homepage Hero Slider ---- */
+(function initHeroSlider() {
+  const slider = document.getElementById('homeHero');
+  if (!slider) return;
+
+  const slides = Array.from(slider.querySelectorAll('.hero-slide'));
+  const dots = Array.from(slider.querySelectorAll('.hero-slider-dot'));
+  const prev = slider.querySelector('.hero-slider-prev');
+  const next = slider.querySelector('.hero-slider-next');
+  const progress = slider.querySelector('.hero-slider-progress');
+  if (slides.length <= 1) return;
+
+  let current = 0;
+  let timer = null;
+  const interval = 6000;
+
+  function showSlide(index) {
+    current = (index + slides.length) % slides.length;
+    slides.forEach((slide, i) => slide.classList.toggle('is-active', i === current));
+    dots.forEach((dot, i) => {
+      const active = i === current;
+      dot.classList.toggle('is-active', active);
+      dot.setAttribute('aria-selected', active ? 'true' : 'false');
+    });
+    if (progress) {
+      progress.classList.remove('is-running');
+      void progress.offsetWidth;
+      progress.classList.add('is-running');
+    }
+  }
+
+  function start() {
+    stop();
+    timer = setInterval(() => showSlide(current + 1), interval);
+  }
+  function stop() {
+    if (timer) clearInterval(timer);
+    timer = null;
+  }
+
+  prev?.addEventListener('click', () => { showSlide(current - 1); start(); });
+  next?.addEventListener('click', () => { showSlide(current + 1); start(); });
+  dots.forEach((dot, i) => dot.addEventListener('click', () => { showSlide(i); start(); }));
+
+  slider.addEventListener('mouseenter', stop);
+  slider.addEventListener('mouseleave', start);
+  slider.addEventListener('focusin', stop);
+  slider.addEventListener('focusout', (e) => {
+    if (!slider.contains(e.relatedTarget)) start();
+  });
+
+  let touchStartX = 0;
+  slider.addEventListener('touchstart', e => { touchStartX = e.changedTouches[0].screenX; }, {passive:true});
+  slider.addEventListener('touchend', e => {
+    const delta = e.changedTouches[0].screenX - touchStartX;
+    if (Math.abs(delta) > 45) {
+      showSlide(current + (delta < 0 ? 1 : -1));
+      start();
+    }
+  }, {passive:true});
+
+  showSlide(0);
+  start();
+})();

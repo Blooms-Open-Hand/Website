@@ -22,17 +22,7 @@
 </head>
 <body>
 
-  <!-- ANNOUNCEMENT BANNER -->
-  <div class="announce-bar" id="announceBar" role="alert">
-    <div class="announce-inner">
-      <span class="announce-dot" aria-hidden="true"></span>
-      <strong>Rooms Available Now</strong>
-      <span class="announce-divider">·</span>
-      <span>We currently have rooms open — tours can be scheduled 7 days a week, with no appointment required</span>
-      <a href="tel:<?=front_phone_href($phone)?>" class="announce-cta">Call <?=front_h($phone)?> →</a>
-    </div>
-    <button class="announce-close" id="announceClose" aria-label="Close">✕</button>
-  </div>
+ 
 
   <!-- IDENTITY BAR -->
   <div class="identity-bar">
@@ -52,7 +42,7 @@
   <!-- ===== NAVIGATION ===== -->
   <nav class="navbar" id="navbar" role="navigation" aria-label="Main navigation">
     <div class="navbar-inner">
-      <a href="index.php" class="navbar-logo" aria-label="<?=front_h($organization)?> Home"><img src="Logo.png" alt="<?=front_h($organization)?>" style="height:70px;width:auto;display:block;" /></a>
+      <a href="index.php" class="navbar-logo" aria-label="<?=front_h($organization)?> Home"><img src="./Logo.png" alt="<?=front_h($organization)?>" style="height:70px;width:auto;display:block;" /></a>
 
       <ul class="navbar-links" role="list">
         <li><a href="index.php" class="active">Home</a></li>
@@ -93,76 +83,23 @@
 
   <main>
 
-    <!-- ===== HERO ===== -->
-    <?php
-$hero = $publishedBanners[0] ?? null;
-$heroTitle = $hero['title'] ?? "Your Parent Deserves More Than a Facility. They Deserve a Real Home.";
-$heroDescription = $hero['description'] ?? "If you are looking for a place where your parent will be genuinely known — not simply looked after — you have found it. Blooms Open Hand is a licensed Adult Family Home with only a small number of residents, round-the-clock awake staff, and caregivers who take the time to learn your parent's stories, preferences, and personality from the very first day. This is what real peace of mind feels like.";
-$heroImage = front_image($hero['image_url'] ?? '', 'frontyard_updated.jpg');
-$heroButtonText = $hero['button_text'] ?? 'See the Home — Free Tour';
-$heroButtonLink = $hero['button_link'] ?? 'contact.php';
-?>
-<section class="hero" aria-label="Welcome to <?=front_h($organization)?>">
-      <div class="hero-bg-pattern" aria-hidden="true"></div>
-      <div class="hero-bg-shapes" aria-hidden="true">
-        <div class="hero-shape hero-shape-1"></div>
-        <div class="hero-shape hero-shape-2"></div>
-        <div class="hero-shape hero-shape-3"></div>
-      </div>
-
-      <div class="hero-inner container">
-        <div class="hero-content">
-          <div class="hero-badge">
-            <span class="hero-badge-dot">★</span>
-            6 Licensed Beds · <?=front_h($address ?: "Marysville, WA")?> · Medicaid Accepted
-          </div>
-
-          <h1><?=nl2br(front_h($heroTitle))?></h1>
-          <p style="color:rgba(255,255,255,0.55);font-size:0.85rem;font-weight:600;letter-spacing:0.09em;text-transform:uppercase;margin-bottom:1rem;">
-            📍 Adult Family Home · <?=front_h($address ?: "Marysville, WA")?>
-          </p>
-
-          <p class="hero-desc"><?=nl2br(front_h($heroDescription))?></p>
-
-          <div class="hero-actions">
-            <a href="<?=front_h($heroButtonLink ?: "contact.php")?>" class="btn btn-accent"><?=front_h($heroButtonText ?: "See the Home — Free Tour")?></a>
-            <a href="tel:<?=front_phone_href($phone)?>" class="btn btn-outline-white">📞 Talk to Us Now</a>
-          </div>
-
-          <div class="hero-stats" role="list" aria-label="Key statistics">
-            <div role="listitem">
-              <span class="hero-stat-num">6</span>
-              <span class="hero-stat-label">Licensed Beds — Never Crowded</span>
-            </div>
-            <div role="listitem">
-              <span class="hero-stat-num">24/7</span>
-              <span class="hero-stat-label">Awake Staff — Always Present</span>
-            </div>
-            <div role="listitem">
-              <span class="hero-stat-num">$0</span>
-              <span class="hero-stat-label">Cost to Tour — No Obligation</span>
-            </div>
+    <!-- ===== COMPACT WELCOME BANNER ===== -->
+    <section class="compact-hero" aria-label="Welcome to <?=front_h($organization)?>">
+      <div class="compact-hero-image" aria-hidden="true"></div>
+      <div class="compact-hero-overlay" aria-hidden="true"></div>
+      <div class="container compact-hero-inner">
+        <div class="compact-hero-copy">
+          <span class="compact-hero-eyebrow">A true home for your loved one</span>
+          <h1>Open Hands. Open Hearts.</h1>
+          <p>Personalized, family-centered care in a warm residential home.</p>
+          <div class="compact-hero-actions">
+            <a href="schedule.php" class="btn btn-accent">Schedule a Tour</a>
+            <a href="tel:<?=front_phone_href($phone)?>" class="compact-hero-phone">📞 <?=front_h($phone)?></a>
           </div>
         </div>
-
-        <div class="hero-visual" aria-hidden="true">
-          <div class="hero-image-frame">
-            <img src="<?=front_h($heroImage)?>" alt="<?=front_h($heroTitle)?>" class="hero-image-main"
-              width="420" height="500"
-            />
-            <div class="hero-image-card">
-              <div class="hero-image-card-icon">
-                <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M12 21.35l-1.45-1.32C5.4 15.36 2 12.28 2 8.5 2 5.42 4.42 3 7.5 3c1.74 0 3.41.81 4.5 2.09C13.09 3.81 14.76 3 16.5 3 19.58 3 22 5.42 22 8.5c0 3.78-3.4 6.86-8.55 11.54L12 21.35z"/></svg>
-              </div>
-              <div class="hero-image-card-text">
-                <strong>Compassionate Care</strong>
-                <span>Nurturing Joy, One Story at a Time</span>
-              </div>
-            </div>
-            <div class="hero-image-dot">
-              <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M12 3L2 12h3v9h6v-5h2v5h6v-9h3L12 3z"/></svg>
-            </div>
-          </div>
+        <div class="compact-hero-card">
+          <span class="compact-hero-card-icon">✓</span>
+          <div><strong>Licensed Adult Family Home</strong><small>6 beds · 24/7 awake staff · Medicaid accepted</small></div>
         </div>
       </div>
     </section>
@@ -199,20 +136,20 @@ $heroButtonLink = $hero['button_link'] ?? 'contact.php';
         <div class="about-preview-grid">
           <div class="about-image-mosaic fade-in" aria-hidden="true">
             <img
-              src="Updated_livingroom.jpg"
-              alt="Warm, welcoming living room at <?=front_h($organization)?>"
+              src="./updated_backyard.jpg"
+              alt="Beautiful backyard deck at <?=front_h($organization)?>"
               class="mosaic-img mosaic-img-1"
               width="420" height="300"
             />
             <img
-              src="bedroom1_updated.jpg"
-              alt="Comfortable private bedroom at <?=front_h($organization)?>"
+              src="./Updated_livingroom.JPG"
+              alt="Warm, welcoming living room at <?=front_h($organization)?>"
               class="mosaic-img mosaic-img-2"
               width="300" height="250"
             />
             <img
-              src="updated_backyard.jpg"
-              alt="Beautiful backyard deck at <?=front_h($organization)?>"
+              src="./bedroom1_updated.jpg"
+              alt="Comfortable private bedroom at <?=front_h($organization)?>"
               class="mosaic-img mosaic-img-3"
               width="260" height="180"
             />
@@ -356,13 +293,13 @@ $heroButtonLink = $hero['button_link'] ?? 'contact.php';
 
           <div class="why-image-stack fade-in fade-in-delay-1" aria-hidden="true">
             <img
-              src="bedroom4_updated.jpg"
+              src="./bedroom4_updated.jpg"
               alt="Spacious, comfortable private room at <?=front_h($organization)?>"
               class="why-img-main"
               width="450" height="400"
             />
             <img
-              src="BathroomWide.jpg"
+              src="./BathroomWide.jpg"
               alt="Accessible, well-equipped bathroom"
               class="why-img-accent"
               width="260" height="220"
