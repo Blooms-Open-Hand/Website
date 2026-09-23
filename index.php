@@ -136,7 +136,7 @@
         <div class="about-preview-grid">
           <div class="about-image-mosaic fade-in" aria-hidden="true">
             <img
-              src="./updated_backyard.jpg"
+              src="./updated_backyard.JPG"
               alt="Beautiful backyard deck at <?=front_h($organization)?>"
               class="mosaic-img mosaic-img-1"
               width="420" height="300"
@@ -148,7 +148,7 @@
               width="300" height="250"
             />
             <img
-              src="./bedroom1_updated.jpg"
+              src="./bedroom1_updated.JPG"
               alt="Comfortable private bedroom at <?=front_h($organization)?>"
               class="mosaic-img mosaic-img-3"
               width="260" height="180"
@@ -293,13 +293,13 @@
 
           <div class="why-image-stack fade-in fade-in-delay-1" aria-hidden="true">
             <img
-              src="./bedroom4_updated.jpg"
+              src="./bedroom4_updated.JPG"
               alt="Spacious, comfortable private room at <?=front_h($organization)?>"
               class="why-img-main"
               width="450" height="400"
             />
             <img
-              src="./BathroomWide.jpg"
+              src="./BathroomWide.JPG"
               alt="Accessible, well-equipped bathroom"
               class="why-img-accent"
               width="260" height="220"
