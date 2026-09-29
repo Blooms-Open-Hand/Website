@@ -5,7 +5,7 @@
           <div class="footer-logo">
             <img src="Logo.png" alt="<?=front_h($organization)?>" style="height:52px; width:auto; margin-bottom:0.5rem;" />
           </div>
-          <p>A licensed Adult Family Home offering compassionate, 24/7 senior care in a warm, family-centered setting. Because every life deserves to be celebrated.</p>
+          <p>A small family home where residents receive everyday care, health support, meaningful company, and the dignity of being known as a person—not a number.</p>
           <span class="footer-tagline">"Open Hands. Open Hearts. A True Home for Your Loved One."</span>
         </div>
 
@@ -23,11 +23,11 @@
         <div class="footer-col">
           <h4>Our Services</h4>
           <ul>
-            <li><a href="services.php">24/7 Personal Care</a></li>
-            <li><a href="services.php">Memory &amp; Dementia Care</a></li>
-            <li><a href="services.php">Medication Management</a></li>
-            <li><a href="services.php">Hospice Support</a></li>
-            <li><a href="services.php">Activity Programs</a></li>
+            <li><a href="services.php">Help with Daily Living</a></li>
+            <li><a href="services.php">Memory &amp; Cognitive Care</a></li>
+            <li><a href="services.php">Medications &amp; Health Monitoring</a></li>
+            <li><a href="services.php">End-of-Life &amp; Hospice Support</a></li>
+            <li><a href="services.php">Activities &amp; Company</a></li>
           </ul>
         </div>
 
@@ -47,13 +47,13 @@
           </div>
           <div class="footer-contact-item">
             <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm-1 17.93c-3.95-.49-7-3.85-7-7.93 0-.62.08-1.21.21-1.79L9 15v1c0 1.1.9 2 2 2v1.93zm6.9-2.54c-.26-.81-1-1.39-1.9-1.39h-1v-3c0-.55-.45-1-1-1H8v-2h2c.55 0 1-.45 1-1V7h2c1.1 0 2-.9 2-2v-.41c2.93 1.19 5 4.06 5 7.41 0 2.08-.8 3.97-2.1 5.39z"/></svg>
-            <span><a href="<?=front_h($mapsUrl ?: "#")?>" target="_blank" rel="noopener noreferrer">www.Bloomsopenhandafh.com</a></span>
+            <span><a href="<?=front_h($mapsUrl ?: "#")?>" target="_blank" rel="noopener noreferrer">www.bloomsopenhandafh.com</a></span>
           </div>
         </div>
       </div>
 
       <div class="footer-bottom">
-        <p>© 2025 <?=front_h($organization)?> LLC. All rights reserved.</p>
+        <p>© 2026 <?=front_h($organization)?> LLC. All rights reserved.</p>
         <div style="display:flex; gap:1.5rem;">
           <p class="text-lg">Designed and Developed By <a href="https://www.kulfinet.com" target="_blank" class="underline text-white font-bold">Kulfinet</a></p>
         </div>

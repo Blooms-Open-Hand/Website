@@ -13,11 +13,11 @@
 <link rel="manifest" href="/site.webmanifest" />
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>Senior Care Blog | Adult Family Home Resources | <?=front_h($organization)?> Everett, WA</title>
-  <meta name="description" content="Expert senior care guides for Everett and Snohomish County families. Learn about adult family homes, Alzheimer's care, Medicaid, Parkinson's, caregiver burnout, and more." />
-  <meta name="keywords" content="Senior Care Blog Everett WA, Adult Family Home Guide Washington, Alzheimer's Care Snohomish County, Parkinson's Care Everett, Medicaid Senior Care Washington" />
+  <title>Senior Care Blog | Adult Family Home Resources | <?=front_h($organization)?> Marysville, WA</title>
+  <meta name="description" content="Expert senior care guides for Marysville and Snohomish County families. Learn about adult family homes, Alzheimer's care, Medicaid, Parkinson's, caregiver burnout, and more." />
+  <meta name="keywords" content="Senior Care Blog Marysville WA, Adult Family Home Guide Washington, Alzheimer's Care Snohomish County, Parkinson's Care Marysville, Medicaid Senior Care Washington" />
   <meta name="robots" content="index, follow" />
-  <link rel="canonical" href="https://www.homecareanna.com/blog.php" />
+  <link rel="canonical" href="https://www.bloomsopenhandafh.com/blog.php" />
   <link rel="stylesheet" href="styles.css" />
   <link rel="stylesheet" href="blog.css" />
   <link rel="preconnect" href="https://fonts.googleapis.com/" />
@@ -35,7 +35,7 @@
         <span class="identity-divider" aria-hidden="true">·</span>
         <span class="identity-sub">Licensed Adult Family Home</span>
         <span class="identity-divider" aria-hidden="true">·</span>
-        <span class="identity-loc">📍 <?=front_h($address ?: "South Everett / North Mill Creek, WA")?></span>
+        <span class="identity-loc">📍 <?=front_h($address ?: "South Marysville / North Mill Creek, WA")?></span>
         <span class="identity-divider identity-divider-hide" aria-hidden="true">·</span>
         <a href="tel:<?=front_phone_href($phone)?>" class="identity-phone">📞 <?=front_h($phone)?></a>
       </div>
@@ -81,7 +81,7 @@
       <div class="container">
         <span class="section-label" style="color:rgba(255,255,255,0.6);">Resources for Families</span>
         <h1>Senior Care Insights</h1>
-        <p>Data-driven guides to help Everett &amp; Snohomish County families navigate senior care with confidence.</p>
+        <p>Data-driven guides to help Marysville &amp; Snohomish County families navigate senior care with confidence.</p>
       </div>
     </section>
 

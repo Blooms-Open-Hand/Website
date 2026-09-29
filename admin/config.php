@@ -5,6 +5,10 @@ define('DB_NAME', 'blootqwr_db');
 define('DB_USER', 'blootqwr_admin');
 define('DB_PASS', '@op10928725');
 
+// define('DB_NAME', 'home_care_db');
+// define('DB_USER', 'root');
+// define('DB_PASS', 'root');
+
 session_start();
 
 function db(): PDO

@@ -2,8 +2,8 @@
 <section class="bg-slate-50">
     <div class="max-w-7xl mx-auto px-5 py-20">
         <span class="text-emerald-700 text-xs font-bold uppercase tracking-[.18em]">Visit us</span>
-        <h1 class="mt-4 text-5xl md:text-6xl font-black">Upcoming tours.</h1>
-        <p class="mt-5 max-w-2xl text-lg text-slate-600">Check available dates and plan your visit.</p>
+        <h1 class="mt-4 text-5xl md:text-6xl font-black">Visit the Home</h1>
+        <p class="mt-5 max-w-2xl text-lg text-slate-600">Tours are arranged by appointment. Choose a date and time that works for your family.</p>
     </div>
 </section>
 

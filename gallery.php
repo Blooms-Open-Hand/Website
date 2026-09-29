@@ -13,11 +13,11 @@
 <link rel="manifest" href="/site.webmanifest" />
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>Photo Gallery | <?=front_h($organization)?> | Everett, WA Senior Care</title>
-  <meta name="description" content="Explore photos of <?=front_h($organization)?> — our warm home, loving caregivers, enriching activities, and vibrant community life. Located in <?=front_h($address ?: "South Everett / North Mill Creek, WA")?>." />
-  <meta name="keywords" content="<?=front_h($organization)?> Gallery, Senior Care Photos Everett WA, Adult Family Home Images, Elder Care Community Washington" />
+  <title>Photo Gallery | <?=front_h($organization)?> | Marysville, WA Senior Care</title>
+  <meta name="description" content="Explore photos of <?=front_h($organization)?> — our warm home, loving caregivers, enriching activities, and vibrant community life. Located in <?=front_h($address ?: "South Marysville / North Mill Creek, WA")?>." />
+  <meta name="keywords" content="<?=front_h($organization)?> Gallery, Senior Care Photos Marysville WA, Adult Family Home Images, Elder Care Community Washington" />
   <meta name="robots" content="index, follow" />
-  <link rel="canonical" href="https://www.homecareanna.com/gallery.php" />
+  <link rel="canonical" href="https://www.bloomsopenhandafh.com/gallery.php" />
   <link rel="stylesheet" href="styles.css" />
   <link rel="preconnect" href="https://fonts.googleapis.com/" />
   <link rel="preconnect" href="https://fonts.gstatic.com/" crossorigin />
@@ -34,7 +34,7 @@
         <span class="identity-divider" aria-hidden="true">·</span>
         <span class="identity-sub">Licensed Adult Family Home</span>
         <span class="identity-divider" aria-hidden="true">·</span>
-        <span class="identity-loc">📍 <?=front_h($address ?: "South Everett / North Mill Creek, WA")?></span>
+        <span class="identity-loc">📍 <?=front_h($address ?: "South Marysville / North Mill Creek, WA")?></span>
         <span class="identity-divider identity-divider-hide" aria-hidden="true">·</span>
         <a href="tel:<?=front_phone_href($phone)?>" class="identity-phone">📞 <?=front_h($phone)?></a>
       </div>

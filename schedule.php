@@ -409,22 +409,22 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     <?=front_h($pageTitle)?>
     |
     <?=front_h($organization)?>
-    Everett, WA
+    Marysville, WA
   </title>
 
   <meta
     name="description"
-    content="<?=front_h($pageDescription)?> Schedule a free tour with <?=front_h($organization)?> in <?=front_h($address ?: "South Everett / North Mill Creek, WA")?>."
+    content="<?=front_h($pageDescription)?> Schedule a free tour with <?=front_h($organization)?> in <?=front_h($address ?: "South Marysville / North Mill Creek, WA")?>."
   />
 
   <meta
     name="keywords"
-    content="Schedule a Tour, <?=front_h($organization)?>, Adult Family Home Everett WA, Senior Care Tour, Elder Care Washington"
+    content="Schedule a Tour, <?=front_h($organization)?>, Adult Family Home Marysville WA, Senior Care Tour, Elder Care Washington"
   />
 
   <meta name="robots" content="index, follow" />
 
-  <link rel="canonical" href="https://www.homecareanna.com/schedule.php" />
+  <link rel="canonical" href="https://www.bloomsopenhandafh.com/schedule.php" />
 
   <link rel="stylesheet" href="styles.css" />
 
@@ -462,7 +462,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
 
         <span class="identity-loc">
           📍
-          <?=front_h($address ?: "South Everett / North Mill Creek, WA")?>
+          <?=front_h($address ?: "South Marysville / North Mill Creek, WA")?>
         </span>
 
         <span class="identity-divider identity-divider-hide" aria-hidden="true">·</span>
@@ -564,8 +564,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
         </nav>
 
         <h1 class="section-title text-6xl">
-          Let&rsquo;s find a time that works
-          for your family.
+          Let&rsquo;s find a time to visit the home.
         </h1>
 
         <p>
@@ -592,7 +591,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
             <span class="section-label">A simple next step</span>
 
             <h2 id="schedule-heading" class="section-title">
-              Come experience the home.
+              Come see the house, meet the caregivers, and ask whatever you like.
             </h2>
 
             <p>
@@ -678,7 +677,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
 
             <div class="contact-form-card">
 
-              <h3>Request a tour or meeting</h3>
+              <h3>Request a tour or care consultation</h3>
 
               <p>
                 Your request will be sent to our scheduling

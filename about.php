@@ -18,7 +18,7 @@
   <meta name="description" content="Learn about <?=front_h($organization)?> LLC — our mission, values, and the compassionate team dedicated to enriching the lives of seniors in <?=front_h($address ?: "Marysville, WA")?>. Open Hands. Open Hearts. A True Home for Your Loved One." />
   <meta name="keywords" content="About <?=front_h($organization)?>, Senior Care Marysville WA, Adult Family Home Mission, Compassionate Elder Care Washington" />
   <meta name="robots" content="index, follow" />
-  <link rel="canonical" href="https://www.Bloomsopenhandafh.com/about.php" />
+  <link rel="canonical" href="https://www.bloomsopenhandafh.com/about.php" />
   <link rel="stylesheet" href="styles.css" />
   <link rel="preconnect" href="https://fonts.googleapis.com/" />
   <link rel="preconnect" href="https://fonts.gstatic.com/" crossorigin />
@@ -29,9 +29,9 @@
   <!-- <div class="announce-bar" id="announceBar" role="alert">
     <div class="announce-inner">
       <span class="announce-dot" aria-hidden="true"></span>
-      <strong>Rooms Available Now</strong>
+      <strong>Private Rooms May Be Available</strong>
       <span class="announce-divider">·</span>
-      <span>We have private rooms open — tours available 7 days a week, no appointment needed</span>
+      <span>We have private rooms open — tours are available by appointment, including evenings or weekends</span>
       <a href="tel:<?=front_phone_href($phone)?>" class="announce-cta">Call <?=front_h($phone)?> →</a>
     </div>
     <button class="announce-close" id="announceClose" aria-label="Close">✕</button>
@@ -100,8 +100,8 @@
           <span aria-hidden="true">›</span>
           <span aria-current="page">About Us</span>
         </nav>
-        <h1>Our Story &amp; Our Mission</h1>
-        <p>Founded on compassion, guided by purpose — we are more than a care home. We are a family dedicated to celebrating every resident's life.</p>
+        <h1>Why Families Choose Us</h1>
+        <p>Care in a house where everyone knows each other. We keep our home small on purpose so residents can build familiar relationships and families can stay closely involved.</p>
       </div>
     </section>
 
@@ -111,17 +111,17 @@
         <div class="mission-grid">
           <div class="fade-in">
             <span class="section-label">Who We Are</span>
-            <h2 id="mission-heading" class="section-title">A Home Built on Purpose &amp; Love</h2>
+            <h2 id="mission-heading" class="section-title">Care in a House Where Everyone Knows Each Other</h2>
 
-            <p><?=front_h($organization)?> LLC was founded on a single conviction: that the final chapters of a person's life should hold as much joy, dignity, and purpose as any other. Set in a quiet residential neighborhood in Marysville, Washington, our small home offers a level of personalized care that simply is not possible in larger facilities.</p>
+            <p>Bloom’s Open Hand looks after a small number of residents at any one time. A caregiver who is responsible for a few people can notice when someone is quieter than usual, has left half a sandwich, or is walking differently than last week. Those small changes can be the first sign that something needs attention.</p>
 
-            <p>We are a licensed Adult Family Home — a small, community-based setting where every resident is truly known, not just a name on a chart. With only six licensed beds across private and semi-private rooms, our caregivers build genuine relationships with residents and their families, learning the stories, preferences, and personalities that make each person unique.</p>
+            <p>We are a family home in Marysville. There is no wing or unit, and nobody lives in a numbered room. Residents have their own bedrooms and furniture and share the kitchen, living room, and yard with the people who look after them.</p>
 
             <div class="motto-box">
-              Our guiding motto — <strong>"Open Hands. Open Hearts. A True Home for Your Loved One."</strong> — is more than a tagline. It reflects how we approach every interaction, every activity, and every moment of care we provide.
+              “Where care meets heart, and family comes first.” Most of what families appreciate follows from our size: caregivers get to know residents, meals are cooked in the house, and visitors can relax because there is no front desk to sign in at.
             </div>
 
-            <p>We believe that true well-being goes far beyond meeting basic physical needs. It means nurturing the human spirit, fostering community, and helping every resident stay connected to the world and the people they love.</p>
+            <p>We do not have a long mission statement. We have a short list of things we try to do every day—and we are happy to be held to them.</p>
 
             <a href="schedule.php" class="btn btn-primary" style="margin-top:1rem;">Schedule a Visit →</a>
           </div>
@@ -137,23 +137,23 @@
             <div class="mission-values" role="list" aria-label="Our core values">
               <div class="value-card" role="listitem">
                 <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M12 21.35l-1.45-1.32C5.4 15.36 2 12.28 2 8.5 2 5.42 4.42 3 7.5 3c1.74 0 3.41.81 4.5 2.09C13.09 3.81 14.76 3 16.5 3 19.58 3 22 5.42 22 8.5c0 3.78-3.4 6.86-8.55 11.54L12 21.35z"/></svg>
-                <h4>Compassion First</h4>
-                <p>Every choice we make is guided by genuine care for each resident's well-being.</p>
+                <h4>People Come Before Procedures</h4>
+                <p>A routine is useful only until it gets in the way of the person it was meant to help.</p>
               </div>
               <div class="value-card" role="listitem">
                 <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M16 11c1.66 0 2.99-1.34 2.99-3S17.66 5 16 5c-1.66 0-3 1.34-3 3s1.34 3 3 3zm-8 0c1.66 0 2.99-1.34 2.99-3S9.66 5 8 5C6.34 5 5 6.34 5 8s1.34 3 3 3zm0 2c-2.33 0-7 1.17-7 3.5V19h14v-2.5c0-2.33-4.67-3.5-7-3.5zm8 0c-.29 0-.62.02-.97.05 1.16.84 1.97 1.97 1.97 3.45V19h6v-2.5c0-2.33-4.67-3.5-7-3.5z"/></svg>
-                <h4>Community &amp; Belonging</h4>
-                <p>We actively connect residents to one another, to their families, and to the world around them.</p>
+                <h4>Keep the Team Small and Steady</h4>
+                <p>Residents should see familiar faces week after week. A steady team makes care more consistent, especially for people with memory loss.</p>
               </div>
               <div class="value-card" role="listitem">
                 <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm-2 15l-5-5 1.41-1.41L10 14.17l7.59-7.59L19 8l-9 9z"/></svg>
-                <h4>Dignity &amp; Respect</h4>
-                <p>Every resident's privacy, autonomy, and individuality is honored in every aspect of care.</p>
+                <h4>Protect Dignity in the Small Moments</h4>
+                <p>Personal care is private. Choices are offered. Nobody should be rushed through a bath because the schedule says so.</p>
               </div>
               <div class="value-card" role="listitem">
                 <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M12 2l3.09 6.26L22 9.27l-5 4.87 1.18 6.88L12 17.77l-6.18 3.25L7 14.14 2 9.27l6.91-1.01L12 2z"/></svg>
-                <h4>Excellence in Care</h4>
-                <p>We hold ourselves to the highest standards in both clinical care and human connection.</p>
+                <h4>Keep the Door Open</h4>
+                <p>Family are not visitors here. Come for lunch, stay for the ball game, or turn up when you can.</p>
               </div>
             </div>
           </div>
@@ -165,9 +165,9 @@
     <section class="section team-section" aria-labelledby="dedication-heading">
       <div class="container">
         <div class="text-center fade-in">
-          <span class="section-label">Our Dedication</span>
-          <h2 id="dedication-heading" class="section-title">Professional, Compassionate, &amp; Devoted</h2>
-          <p class="section-subtitle team-intro">Our caregivers are more than employees — they are committed partners in each resident's journey, trained to deliver both clinical excellence and heartfelt human connection.</p>
+          <span class="section-label">What We Believe</span>
+          <h2 id="dedication-heading" class="section-title">A Short List We Try to Live Every Day</h2>
+          <p class="section-subtitle team-intro">Our approach is built around a small number of practical promises: people before procedures, a small and steady team, purpose in each day, an open door for family, and dignity in the small moments.</p>
         </div>
 
         <div class="dedication-grid" role="list">
@@ -179,8 +179,8 @@
               width="380" height="220"
             />
             <div class="dedication-card-body">
-              <h3>Professional Expertise</h3>
-              <p>Our team is trained in medication management, vital signs monitoring, wound care, Alzheimer's support, and a full range of medical and daily living assistance — so residents always receive skilled, attentive care.</p>
+              <h3>Give Each Day Some Purpose</h3>
+              <p>Everybody needs something to do that matters to them. That might be folding towels, feeding the birds, choosing the music, sorting the mail, or simply sharing a conversation.</p>
             </div>
           </article>
 
@@ -192,8 +192,8 @@
               width="380" height="220"
             />
             <div class="dedication-card-body">
-              <h3>Compassionate Support</h3>
-              <p>Beyond clinical care, our team is trained in empathetic communication, active listening, and emotional support — building genuine trust and comfort with every resident and their family over time.</p>
+              <h3>Family Are Part of the Home</h3>
+              <p>We keep the door open to family. Visits, meals, activities, phone calls, and ordinary time together all have a place here.</p>
             </div>
           </article>
 
@@ -205,8 +205,8 @@
               width="380" height="220"
             />
             <div class="dedication-card-body">
-              <h3>Personalized Daily Care</h3>
-              <p>We take the time to learn each resident's unique history, preferences, and personality. This is not cookie-cutter care — it is thoughtful, personalized support that honors who each person truly is.</p>
+              <h3>Support Changes as Needs Change</h3>
+              <p>Needs rarely stay the same. We review each resident’s plan with the family before move-in, after the first month, and whenever something changes.</p>
             </div>
           </article>
         </div>
@@ -219,16 +219,16 @@
         <div class="about-preview-grid">
           <div class="fade-in">
             <span class="section-label">Our Community</span>
-            <h2 id="community-heading" class="section-title">A Community That Truly Embraces Life</h2>
+            <h2 id="community-heading" class="section-title">Working With Families</h2>
 
-            <p>At <?=front_h($organization)?>, we believe a true home is a community that embraces life. We cultivate this vibrant environment by actively connecting our residents to the world around them.</p>
+            <p>You know your parent better than we do. You know their temper, jokes, fears, routines, and favorite foods. We ask you to tell us, and we keep asking, because care is better when we can draw on that knowledge.</p>
 
-            <p>We do not just provide care; we are a family. We help each resident preserve and share their life story, nurturing a deep sense of purpose and belonging that cannot be replaced.</p>
+            <p>Before move-in, we ask about routines, health, the things that upset your loved one, and the things that comfort them. After move-in, we stay in touch by phone, text, or email and review the care plan as needs change.</p>
 
-            <p>We also host engaging activities and events and encourage families to take part, ensuring that our residents stay connected with their loved ones and the broader community. Themed celebrations, community outings, and regular family gatherings are all part of life at <?=front_h($organization)?>.</p>
+            <p>Visiting is part of family life here. Some families come every day and some once a week. Bring the grandchildren, join a meal, or sit in on an activity.</p>
 
             <div style="display:flex; gap:0.85rem; flex-wrap:wrap; margin-top:1.75rem;">
-              <a href="gallery.php" class="btn btn-primary">See Our Community →</a>
+              <a href="gallery.php" class="btn btn-primary">See Our Home →</a>
               <a href="services.php" class="btn btn-outline">View Our Services</a>
             </div>
           </div>
@@ -266,8 +266,8 @@
       <div class="container">
         <div class="cta-banner-inner fade-in">
           <div class="cta-banner-content">
-            <h2 id="cta-about-heading">See Our Home for Yourself</h2>
-            <p>We invite you and your family to tour <?=front_h($organization)?> and experience the warmth, care, and community that set us apart. No pressure — just an honest look at what makes us different.</p>
+            <h2 id="cta-about-heading">Come and See the House</h2>
+            <p>Meet the caregivers, walk through the house, sit at the kitchen table, and ask whatever you like. There is no sales pitch and no pressure to decide.</p>
           </div>
           <div class="cta-banner-actions">
             <a href="schedule.php" class="btn btn-outline-white">Schedule a Free Tour</a>

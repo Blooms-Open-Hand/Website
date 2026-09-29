@@ -131,11 +131,11 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
 <link rel="manifest" href="/site.webmanifest" />
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>Contact Us &amp; Schedule a Tour | <?=front_h($organization)?> Everett, WA</title>
-  <meta name="description" content="Contact <?=front_h($organization)?> in <?=front_h($address ?: "South Everett / North Mill Creek, WA")?>. Schedule a free tour, ask questions about our senior care services, or reach us by phone, email, or visit. 10630 44th Ave SE, Everett WA 98208." />
-  <meta name="keywords" content="Contact <?=front_h($organization)?>, Adult Family Home Everett WA, Schedule Senior Care Tour, Elder Care Contact Washington" />
+  <title>Contact Us &amp; Schedule a Tour | <?=front_h($organization)?> Marysville, WA</title>
+  <meta name="description" content="Contact <?=front_h($organization)?> in <?=front_h($address ?: "South Marysville / North Mill Creek, WA")?>. Schedule a free tour, ask questions about our senior care services, or reach us by phone, email, or visit. Marysville, Washington." />
+  <meta name="keywords" content="Contact <?=front_h($organization)?>, Adult Family Home Marysville WA, Schedule Senior Care Tour, Elder Care Contact Washington" />
   <meta name="robots" content="index, follow" />
-  <link rel="canonical" href="https://www.homecareanna.com/contact.php" />
+  <link rel="canonical" href="https://www.bloomsopenhandafh.com/contact.php" />
   <link rel="stylesheet" href="styles.css" />
   <link rel="preconnect" href="https://fonts.googleapis.com/" />
   <link rel="preconnect" href="https://fonts.gstatic.com/" crossorigin />
@@ -152,7 +152,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
         <span class="identity-divider" aria-hidden="true">·</span>
         <span class="identity-sub">Licensed Adult Family Home</span>
         <span class="identity-divider" aria-hidden="true">·</span>
-        <span class="identity-loc">📍 <?=front_h($address ?: "South Everett / North Mill Creek, WA")?></span>
+        <span class="identity-loc">📍 <?=front_h($address ?: "South Marysville / North Mill Creek, WA")?></span>
         <span class="identity-divider identity-divider-hide" aria-hidden="true">·</span>
         <a href="tel:<?=front_phone_href($phone)?>" class="identity-phone">📞 <?=front_h($phone)?></a>
       </div>
@@ -207,8 +207,8 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
           <span aria-hidden="true">›</span>
           <span aria-current="page">Contact Us</span>
         </nav>
-        <h1>Get in Touch &amp; Schedule a Tour</h1>
-        <p>We'd love to hear from you. Reach out by phone, email, or fill out the form below — we typically respond within a few hours.</p>
+        <h1>Come and See the House</h1>
+        <p>If you are thinking about Bloom’s Open Hand for someone you love, the best next step is to visit. Meet the caregivers, walk through the house, sit at the kitchen table, and ask whatever you like.</p>
       </div>
     </section>
 
@@ -220,8 +220,8 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
           <!-- Contact Info -->
           <div class="fade-in">
             <span class="section-label">Reach Us</span>
-            <h2 id="contact-heading" class="section-title">We're Here for You</h2>
-            <p>Whether you have questions about our services, want to discuss a loved one's care needs, or simply want to schedule a visit — we are always happy to talk. No pressure, no obligation.</p>
+            <h2 id="contact-heading" class="section-title">Talk With Us</h2>
+            <p>Tell us about your loved one, their routines, health needs, and the things that matter to them. We will answer questions honestly and help you understand whether our home can provide the right level of care.</p>
 
             <div class="contact-items">
               <div class="contact-item">
@@ -271,7 +271,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
                 </div>
                 <div class="contact-item-body">
                   <strong>Website</strong>
-                  <a href="<?=front_h($mapsUrl ?: "#")?>" target="_blank" rel="noopener noreferrer">www.homecareanna.com</a>
+                  <a href="<?=front_h($mapsUrl ?: "#")?>" target="_blank" rel="noopener noreferrer">www.bloomsopenhandafh.com</a>
                 </div>
               </div>
             </div>
@@ -312,7 +312,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
                 </div>
 
                 <div class="form-group">
-                  <label for="tourSchedule">Preferred Tour Schedule</label>
+                  <label for="tourSchedule">Preferred Visit Schedule</label>
                   <select id="tourSchedule" name="tourSchedule">
                     <option value="" selected>Select an available schedule...</option>
                     <?php foreach ($upcomingTours as $tour): ?>
@@ -324,7 +324,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
                 </div>
 
                 <div class="form-group">
-                  <label for="relationship">Your Relationship to the Resident</label>
+                  <label for="relationship">Your Relationship to Your Loved One</label>
                   <select id="relationship" name="relationship">
                     <option value="" disabled selected>Select one...</option>
                     <option value="self">I am the future resident</option>
@@ -338,7 +338,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
                 </div>
 
                 <div class="form-group">
-                  <label for="careNeeds">Primary Care Needs (optional)</label>
+                  <label for="careNeeds">Care Needs (optional)</label>
                   <select id="careNeeds" name="careNeeds">
                     <option value="" disabled selected>Select care needs...</option>
                     <option value="personal">Personal &amp; Daily Living Care</option>
@@ -361,7 +361,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
                 </button>
 
                 <p style="font-size:0.78rem; color:var(--text-light); margin-top:0.75rem; text-align:center;">
-                  We respect your privacy. Your information is never shared with third parties.
+                  We respect your privacy and use your information to respond to your request.
                 </p>
               </form>
             </div>
@@ -376,8 +376,8 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
       <div class="container">
         <div class="text-center fade-in" style="margin-bottom:2rem;">
           <span class="section-label">Find Us</span>
-          <h2 id="map-heading" class="section-title">Our Location in Everett, WA</h2>
-          <p class="section-subtitle">Conveniently located in a quiet residential neighborhood in <?=front_h($address ?: "South Everett / North Mill Creek, WA")?> — easy to find and easy to visit.</p>
+          <h2 id="map-heading" class="section-title">Our Home in Marysville, Washington</h2>
+          <p class="section-subtitle">Conveniently located in a quiet residential neighborhood in <?=front_h($address ?: "South Marysville / North Mill Creek, WA")?> — easy to find and easy to visit.</p>
         </div>
         <div class="map-container fade-in">
           <iframe
@@ -392,7 +392,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
           ></iframe>
         </div>
         <div class="text-center" style="margin-top:1.5rem;">
-          <a href="https://maps.google.com/?q=10630+44th+Ave+SE+Everett+WA+98208"
+          <a href="https://maps.google.com/?q=10630+44th+Ave+SE+Marysville+WA+98208"
              target="_blank" rel="noopener noreferrer" class="btn btn-outline">
             Get Directions on Google Maps →
           </a>
@@ -405,7 +405,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
       <div class="container">
         <div class="text-center fade-in">
           <span class="section-label">Common Questions</span>
-          <h2 id="faq-heading" class="section-title">Frequently Asked Questions</h2>
+          <h2 id="faq-heading" class="section-title">Questions Families Often Ask</h2>
         </div>
 
         <div style="display:grid; grid-template-columns:1fr 1fr; gap:1.5rem; margin-top:2.5rem;" class="fade-in">

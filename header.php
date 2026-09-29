@@ -44,7 +44,7 @@
             <!-- <div class="h-11 w-11 rounded-2xl bg-emerald-700 text-white flex items-center justify-center text-xl font-bold">♥</div> -->
             <div>
               <div class="font-extrabold text-lg leading-none"><?=h($organization)?></div>
-              <div class="text-[9px] uppercase tracking-[.18em] text-slate-400 mt-1">Where Every Resident Is Family.</div>
+              <div class="text-[9px] uppercase tracking-[.18em] text-slate-400 mt-1">Where care meets heart, and family comes first.</div>
             </div>
           </a>
           <nav class="hidden lg:flex items-center gap-7 text-sm font-semibold">
