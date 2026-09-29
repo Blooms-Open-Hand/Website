@@ -90,7 +90,7 @@
       <div class="container compact-hero-inner">
         <div class="compact-hero-copy">
           <span class="compact-hero-eyebrow">Where Care Meets Heart, and Family Comes First.</span>
-          <h1>Bloom’s Open Hand</h1>
+          <h1>Bloom’s Open Hand AFH LLC</h1>
           <p>A small family home where everyday care, health support, meaningful company, and dignity come together under one roof.</p>
           <div class="compact-hero-actions">
             <a href="schedule.php" class="btn btn-accent">Schedule a Tour</a>
