@@ -19,6 +19,15 @@
   <link rel="stylesheet" href="styles.css" />
   <link rel="preconnect" href="https://fonts.googleapis.com/" />
   <link rel="preconnect" href="https://fonts.gstatic.com/" crossorigin />
+  <style>
+  @media (max-width: 768px) {
+    .trust-item{
+      width:100%;
+      align-items:center;
+      justify-content:start;
+    }
+}
+  </style>
 </head>
 <body>
 
@@ -108,7 +117,8 @@
     <div class="trust-bar" role="complementary" aria-label="Trust indicators">
       <div class="trust-bar-inner container">
         <div class="trust-item">
-          <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z"/></svg>
+          <!-- <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z"/></svg> -->
+          <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm-2 15l-5-5 1.41-1.41L10 14.17l7.59-7.59L19 8l-9 9z"/></svg>
           <span>Licensed Adult Family Home in Washington</span>
         </div>
         <div class="trust-item">
