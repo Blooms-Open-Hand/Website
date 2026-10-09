@@ -17,7 +17,7 @@
 
 define(
     'BLOOMS_MAIL_TO',
-    'teklayberhe@gmail.com'
+    'rahelmulu24@gmail.com'
 );
 
 define(
@@ -27,7 +27,7 @@ define(
 
 define(
     'BLOOMS_MAIL_FROM_NAME',
-    'Blooms Open Hand Adult Family Home'
+    "Bloom's Open Hand Adult Family Home"
 );
 
 

@@ -339,7 +339,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
 
 
                     $mailSent = blooms_smtp_mail(
-                        'teklayberhe@gmail.com',
+                        'rahelmulu24@gmail.com',
                         'New Schedule Request - ' . $name,
                         $emailHtml,
                         $email
