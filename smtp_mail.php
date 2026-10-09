@@ -17,7 +17,7 @@
 
 define(
     'BLOOMS_MAIL_TO',
-    'yosefsahle48@gmail.com'
+    'teklayberhe@gmail.com'
 );
 
 define(
