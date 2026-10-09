@@ -128,7 +128,7 @@
 
           <div class="fade-in fade-in-delay-1">
             <img
-              src="frontyard_updated.jpg"
+              src="frontyard_updated.JPG"
               alt="<?=front_h($organization)?> — beautiful home in Marysville, WA"
               class="story-image"
               width="560" height="400"
@@ -173,7 +173,7 @@
         <div class="dedication-grid" role="list">
           <article class="dedication-card fade-in fade-in-delay-1" role="listitem">
             <img
-              src="Updated_livingroom.jpg"
+              src="Updated_livingroom.JPG"
               alt="Professional medical caregivers at <?=front_h($organization)?>"
               class="dedication-card-img"
               width="380" height="220"
@@ -186,7 +186,7 @@
 
           <article class="dedication-card fade-in fade-in-delay-2" role="listitem">
             <img
-              src="bedroom4_updated.jpg"
+              src="bedroom4_updated.JPG"
               alt="Caregiver providing compassionate support to senior resident"
               class="dedication-card-img"
               width="380" height="220"
@@ -199,7 +199,7 @@
 
           <article class="dedication-card fade-in fade-in-delay-3" role="listitem">
             <img
-              src="Bedroom2.jpg"
+              src="Bedroom2.JPG"
               alt="Caregiver helping resident with personalized daily care"
               class="dedication-card-img"
               width="380" height="220"
@@ -235,19 +235,19 @@
 
           <div class="about-image-mosaic fade-in fade-in-delay-1" aria-hidden="true">
             <img
-              src="updated_backyard.jpg"
+              src="updated_backyard.JPG"
               alt="Seniors enjoying group activities at <?=front_h($organization)?>"
               class="mosaic-img mosaic-img-1"
               width="420" height="300"
             />
             <img
-              src="bedroom1_updated.jpg"
+              src="bedroom1_updated.JPG"
               alt="Caregiver and resident sharing a joyful moment"
               class="mosaic-img mosaic-img-2"
               width="300" height="240"
             />
             <img
-              src="bedroom4_updated.jpg"
+              src="bedroom4_updated.JPG"
               alt="Senior resident in comfortable home setting"
               class="mosaic-img mosaic-img-3"
               width="260" height="180"
